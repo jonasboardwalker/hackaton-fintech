@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "~/i18n/routing";
 import { cn } from "@admin-shad-template/ui/utils";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useIsActiveRoute } from "~/app/_hooks/use-is-active-route";
 import { NavigationItemType } from "~/types/navigation.types";

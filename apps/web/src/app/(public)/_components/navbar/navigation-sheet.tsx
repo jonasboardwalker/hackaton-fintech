@@ -11,10 +11,8 @@ import { Logo } from "../../../_components/logo";
 import { NavMenu } from "./nav-menu";
 import { SignedOut } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
-import { getTranslations } from "next-intl/server";
 
 export const NavigationSheet = async () => {
-  const t = await getTranslations();
   return (
     <Sheet>
       <VisuallyHidden>
@@ -33,13 +31,13 @@ export const NavigationSheet = async () => {
           <SignedOut>
             <Link href={ROUTES.LOG_IN}>
               <Button variant="outline" className="w-full sm:hidden">
-                {t("ui.login")}
+                Login
               </Button>
             </Link>
           </SignedOut>
           <SignedOut>
             <Link href={ROUTES.SIGN_UP}>
-              <Button className="xs:hidden w-full">{t("ui.sign_up")}</Button>
+              <Button className="xs:hidden w-full">Sign Up</Button>
             </Link>
           </SignedOut>
         </div>

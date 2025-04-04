@@ -1,6 +1,5 @@
 "use client";
 
-import { Link, usePathname } from "~/i18n/routing";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -10,6 +9,8 @@ import {
   BreadcrumbPage,
 } from "@admin-shad-template/ui";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 import { ROUTES } from "~/app/_lib/routes";
 

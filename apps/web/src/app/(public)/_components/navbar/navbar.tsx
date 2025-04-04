@@ -5,11 +5,9 @@ import { NavigationSheet } from "./navigation-sheet";
 import { ModeSwitcher } from "~/app/_components/mode-switcher";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
-import { Link } from "~/i18n/routing";
-import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 const Navbar = async () => {
-  const t = await getTranslations();
   return (
     <nav className="bg-background border-accent h-16 border-b">
       <div className="mx-auto flex h-full max-w-screen-xl items-center justify-between px-4 sm:px-6">
@@ -22,9 +20,7 @@ const Navbar = async () => {
           <ModeSwitcher />
           <SignedIn>
             <Link href={ROUTES.DASHBOARD}>
-              <Button variant="outline">
-                {t("dashboard_routes.dashboard")}
-              </Button>
+              <Button variant="outline">Dashboard</Button>
             </Link>
           </SignedIn>
           <SignedIn>
@@ -33,13 +29,11 @@ const Navbar = async () => {
           <SignedOut>
             <Link href={ROUTES.LOG_IN}>
               <Button variant="outline" className="hidden sm:inline-flex">
-                {t("ui.login")}
+                Login
               </Button>
             </Link>
             <Link href={ROUTES.SIGN_UP}>
-              <Button className="xs:inline-flex hidden">
-                {t("ui.sign_up")}
-              </Button>
+              <Button className="xs:inline-flex hidden">Sign Up</Button>
             </Link>
           </SignedOut>
 
