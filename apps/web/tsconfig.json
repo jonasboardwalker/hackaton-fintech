@@ -1,0 +1,24 @@
+{
+  "extends": "@admin-shad-template/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "~/components/*": ["./src/app/[locale]/_components/*"],
+      "~/firebase/*": ["./src/firebase/*"],
+      "~/hooks/*": ["./src/app/[locale]/_hooks/*"],
+      "~/lib/*": ["./src/app/[locale]/_lib/*"]
+    }
+  },
+  "include": [
+    ".eslintrc.cjs",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.js",
+    ".next/types/**/*.ts",
+    "postcss.config.mjs"
+  ],
+  "exclude": ["node_modules"]
+}

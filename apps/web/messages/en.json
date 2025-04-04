@@ -1,0 +1,59 @@
+{
+  "navbar": {
+    "exit_dashboard": "Exit"
+  },
+  "locale_swither": {
+    "label": "Change language",
+    "locale": "{locale, select, ru {🇷🇺 Russian} en {🇺🇸 English} cs {🇨🇿 Czech} other {Unknown}}",
+    "locale_flag": "{locale, select, ru {🇷🇺} en {🇺🇸} cs {🇨🇿} other {Unknown}}"
+  },
+  "ui": {
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "create": "Create",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "save": "Save",
+    "login": "Login",
+    "sign_up": "Sign Up",
+    "combobox": {
+      "placeholder": "Search option...",
+      "select_label_text": "Select option...",
+      "no_results_text": "No option found."
+    }
+  },
+  "dashboard_routes": {
+    "courses_route": "Courses",
+    "dashboard": "Dashboard",
+    "account": "More"
+  },
+  "messages": {
+    "something_went_wrong": "Uh oh! Something went wrong.",
+    "recommended_aspect_ratio": "{ratio} aspect ration recommended",
+    "error_uploading_file": "Error uploading file {name}:",
+    "files_successfully_uploaded": "Files successfully uploaded",
+    "no_file_selected": "No file selected",
+    "no_files_to_upload": "No files to upload",
+    "invalid_file_path": "Invalid path for saving the file",
+    "upload_failed": "Upload failed: {error}",
+    "are_you_sure": "Are you sure?",
+    "unsaved_changes_warning": "All unsaved data will be lost",
+    "locale_removed": "The language removed",
+    "error_removing_locale": "Error when deleting a language",
+    "user_not_logged_in": "User is not logged in",
+    "attachments_added": "Attachments added",
+    "error_adding_attachments": "Error when adding attachments",
+    "attachment_deleted": "Attachment deleted",
+    "error_deleting_file": "Error deleting file",
+    "file_successfully_deleted": "File successfully deleted"
+  },
+  "upload_file": {
+    "click_or_drag_and_drop": "<bold>Click to upload</bold> or drag and drop",
+    "file_description": {
+      "image": "PNG or JPG (max {maxSize}MB)",
+      "video": "Video File (max {maxSize}MB)",
+      "other": "Any file type (max {maxSize}MB)"
+    }
+  }
+}

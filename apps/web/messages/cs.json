@@ -1,0 +1,59 @@
+{
+  "navbar": {
+    "exit_dashboard": "Výstup"
+  },
+  "locale_swither": {
+    "label": "Změna jazyka",
+    "locale": "{locale, select, ru {🇷🇺 Ruština} en {🇺🇸 Angličtina} cs {🇨🇿 Čeština} other {Unknown}}",
+    "locale_flag": "{locale, select, ru {🇷🇺} en {🇺🇸} cs {🇨🇿} other {Unknown}}"
+  },
+  "ui": {
+    "cancel": "Zrušit",
+    "continue": "Pokračovat",
+    "create": "Vytvořit",
+    "edit": "Upravit",
+    "add": "Přidat",
+    "remove": "Odstranit",
+    "save": "Uložit",
+    "login": "Přihlášení",
+    "sign_up": "Registrace",
+    "combobox": {
+      "placeholder": "Vyhledávání...",
+      "select_label_text": "Vyberte možnost...",
+      "no_results_text": "Žádná možnost nebyla nalezena."
+    }
+  },
+  "dashboard_routes": {
+    "courses_route": "Kurzy",
+    "dashboard": "Dashboard",
+    "account": "Více"
+  },
+  "messages": {
+    "something_went_wrong": "Uh oh! Něco se pokazilo.",
+    "recommended_aspect_ratio": "Doporučený poměr stran {ratio}",
+    "error_uploading_file": "Chyba při nahrávání souboru {name}:",
+    "files_successfully_uploaded": "Soubory byly úspěšně nahrány",
+    "no_file_selected": "Není vybrán žádný soubor",
+    "no_files_to_upload": "Žádné soubory k nahrání",
+    "invalid_file_path": "Nesprávná cesta pro uložení souboru",
+    "upload_failed": "Odeslání se nezdařilo: {error}",
+    "are_you_sure": "Jste si jistý?",
+    "unsaved_changes_warning": "Všechna neuložená data budou ztracena",
+    "locale_removed": "Jazyk byl odstraněn",
+    "error_removing_locale": "Chyba při odstraňování jazyka",
+    "user_not_logged_in": "Uživatel není přihlášen",
+    "attachments_added": "Byly přidány přílohy",
+    "error_adding_attachments": "Chyba při přidávání příloh",
+    "attachment_deleted": "Příloha odstraněna",
+    "error_deleting_file": "Chyba při odstraňování souboru",
+    "file_successfully_deleted": "Soubor byl úspěšně odstraněn"
+  },
+  "upload_file": {
+    "click_or_drag_and_drop": "<bold>Kliknutím na tlačítko nahrajte</bold> nebo přetáhněte a pusťte",
+    "file_description": {
+      "image": "PNG nebo JPG (max. {maxSize}MB)",
+      "video": "Video soubor (max. {maxSize}MB)",
+      "other": "Jakýkoli typ souboru (max. {maxSize}MB)"
+    }
+  }
+}
