@@ -16,9 +16,8 @@ export const useNavigationRoutes = ({
   return useMemo(() => {
     if (userRole === "admin") {
       return adminRoutes;
-    } else if (userRole === "user") {
+    } else {
       return userRoutes;
     }
-    return [];
   }, [userRole, adminRoutes, userRoutes]);
 };

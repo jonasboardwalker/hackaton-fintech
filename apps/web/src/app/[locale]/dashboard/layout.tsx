@@ -53,8 +53,7 @@ const DashboardLayout = async ({
               </div>
             </div>
           </header>
-          {userRole === "admin" && admin}
-          {userRole === "user" && user}
+          {userRole === "admin" ? admin : user}
         </SidebarInset>
       </SidebarProvider>
     </SignedIn>
