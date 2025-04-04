@@ -1,31 +1,89 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider     = "postgresql"
-  url          = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl    = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url          = env("POSTGRES_PRISMA_URL")      // Pooled connection
+  directUrl    = env("POSTGRES_URL_NON_POOLING") // Direct connection
   relationMode = "prisma"
 }
 
-enum Locale {
-  cs // Czech
-  en // English
-  ru // Russian
+model User {
+  id        String          @id @default(uuid())
+  email     String          @unique
+  role      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  TransactionLogs TransactionLog[] @relation("UserLogs")
+  
+  @@index([role])
+  @@index([createdAt])
 }
 
-model StripeCustomer {
-  id               String @id @default(uuid())
-  userId           String @unique
-  stripeCustomerId String @unique
+model Client {
+  id        String          @id @default(uuid())
+  name      String
+  apiKey    String          @unique
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  TransactionLogs TransactionLog[] @relation("ClientLogs")
+
+  // Example index if you frequently search by name or createdAt
+  @@index([name])
+  @@index([createdAt])
+}
+
+model Rule {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+
+  // Throttling fields
+  role        String?        // e.g., "employee"
+  maxCount    Int?           // e.g., 5
+  period      String?        // e.g., "hour", "day"
+  startTime   DateTime?      // e.g., 09:00
+  endTime     DateTime?      // e.g., 17:00
+  action      String         // "deny", "alert", "allow"
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relation to logs
+  TransactionLogs TransactionLog[] @relation("RuleLogs")
+
+  @@index([role])
+  @@index([name])
+}
+
+
+model TransactionLog {
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+
+  // References
+  userId     String?
+  user       User?      @relation("UserLogs", fields: [userId], references: [id])
+
+  role       String     // role at time of transaction
+  clientId   String?
+  client     Client?    @relation("ClientLogs", fields: [clientId], references: [id])
+
+  ruleId     String?
+  rule       Rule?      @relation("RuleLogs", fields: [ruleId], references: [id])
+
+  amount     Float
+  outcome    String     // "allow", "deny", "alert"
+  reason     String?
+
+  // Indexes for efficient lookups
+  @@index([createdAt])
+  @@index([userId])
+  @@index([clientId])
+  @@index([ruleId])
+  @@index([role])
 }
