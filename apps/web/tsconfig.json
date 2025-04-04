@@ -4,10 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/components/*": ["./src/app/[locale]/_components/*"],
+      "~/components/*": ["src/app/_components/*"],
       "~/firebase/*": ["./src/firebase/*"],
-      "~/hooks/*": ["./src/app/[locale]/_hooks/*"],
-      "~/lib/*": ["./src/app/[locale]/_lib/*"]
+      "~/hooks/*": ["src/app/_hooks/*"],
+      "~/lib/*": ["src/app/_lib/*"]
     }
   },
   "include": [

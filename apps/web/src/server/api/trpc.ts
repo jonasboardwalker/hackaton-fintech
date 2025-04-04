@@ -116,6 +116,39 @@ const isAuthenticated = t.middleware(({ ctx, next }) => {
   });
 });
 
+const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.headers) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "No headers present",
+    });
+  }
+
+  const apiKey = ctx.headers.get("x-api-key");
+  if (!apiKey) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Missing x-api-key header",
+    });
+  }
+
+  // Example: search the 'Client' table for a record with this apiKey
+  // Adjust to your own DB logic
+  const client = await ctx.db.client.findUnique({
+    where: { apiKey },
+  });
+
+  if (!client || !client.isActive) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Invalid or inactive API key",
+    });
+  }
+
+  // If valid, proceed
+  return next();
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -126,3 +159,7 @@ const isAuthenticated = t.middleware(({ ctx, next }) => {
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
 export const privateProcedure = t.procedure.use(isAuthenticated);
+
+export const apiKeyProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(apiKeyMiddleware);

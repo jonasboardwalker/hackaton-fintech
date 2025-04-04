@@ -1,9 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "~/i18n/routing";
-import { ROUTES } from "~/lib/routes";
-
-const intlMiddleware = createMiddleware(routing);
+import { ROUTES } from "~/app/_lib/routes";
+import { NextResponse } from "next/server";
 
 const dashboardMatcher = createRouteMatcher([
   `/:locale${ROUTES.DASHBOARD}(.*)`,
@@ -14,7 +11,7 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 
-  return intlMiddleware(req);
+  return NextResponse.next();
 });
 
 export const config = {

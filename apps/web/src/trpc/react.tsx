@@ -9,7 +9,7 @@ import SuperJSON from "superjson";
 
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
-import { useLocale } from "~/lib/next-intl";
+import { useLocale } from "~/app/_lib/next-intl";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
