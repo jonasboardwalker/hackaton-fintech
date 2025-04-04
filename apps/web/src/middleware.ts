@@ -2,9 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { ROUTES } from "~/app/_lib/routes";
 import { NextResponse } from "next/server";
 
-const dashboardMatcher = createRouteMatcher([
-  `/:locale${ROUTES.DASHBOARD}(.*)`,
-]);
+const dashboardMatcher = createRouteMatcher([`${ROUTES.DASHBOARD}(.*)`]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (dashboardMatcher(req)) {
