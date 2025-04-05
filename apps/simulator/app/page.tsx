@@ -1,9 +1,43 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, BarChart3, Clock, CreditCard, DollarSign, Shield } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowUpRight,
+  BarChart3,
+  Clock,
+  CreditCard,
+  DollarSign,
+  Shield,
+} from "lucide-react";
+import Link from "next/link";
+import { mockTransactions } from "@/lib/mock-data";
+import { TransactionCard } from "@/components/transaction-card";
+
+type TransactionMetadata = {
+  // Transaction core
+  transactionId: string;
+  userId: string;
+  amount: number; // in EUR
+  currency: string;
+  timestamp: string; // ISO 8601
+  paymentMethod: "card" | "bank_transfer";
+
+  // User context
+  accountAgeDays: number;
+
+  // Device info
+  deviceId: string;
+  deviceFingerprint: string;
+  isNewDevice: boolean;
+
+  // Network info, Geo behavior
+  ipAddress: string;
+  location: string; // e.g., 'DE', 'FR', 'CZ'
+
+  // Timing
+  isNightTime: boolean; // 00:00–04:00 local time
+};
 
 export default function Home() {
   return (
@@ -21,7 +55,9 @@ export default function Home() {
 
       <Card className="shadow-md">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Available Balance
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold">€4,750.00</div>
@@ -64,65 +100,20 @@ export default function Home() {
         </Link>
       </div>
 
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Recent Activity</h2>
-        </div>
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-2xl font-bold">Recent Activity</h1>
+        <p className="text-sm text-gray-500">
+          Your recent transactions and activity
+        </p>
+      </div>
 
+      <div className="flex-1 overflow-y-auto">
         <div className="space-y-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                    <ArrowUpRight className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Transfer to Alex</p>
-                    <p className="text-xs text-muted-foreground">Today, 10:30 AM</p>
-                  </div>
-                </div>
-                <p className="font-semibold">-€50.00</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center mr-3">
-                    <Shield className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Salary Deposit</p>
-                    <p className="text-xs text-muted-foreground">Yesterday</p>
-                  </div>
-                </div>
-                <p className="font-semibold text-primary">+€2,500.00</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center mr-3">
-                    <Clock className="h-5 w-5 text-red-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Transaction Denied</p>
-                    <p className="text-xs text-muted-foreground">Yesterday, 9:45 PM</p>
-                  </div>
-                </div>
-                <Badge variant="destructive">After hours</Badge>
-              </div>
-            </CardContent>
-          </Card>
+          {mockTransactions.map((transaction) => (
+            <TransactionCard key={transaction.id} transaction={transaction} />
+          ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
-
