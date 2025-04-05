@@ -8,7 +8,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@admin-shad-template/ui";
-import { cn } from "@admin-shad-template/ui/utils";
+import { cn } from "@admin-shad-template/ui";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";

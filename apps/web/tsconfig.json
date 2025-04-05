@@ -2,12 +2,14 @@
   "extends": "@admin-shad-template/typescript-config/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "~/*": ["./src/*"],
       "~/components/*": ["src/app/_components/*"],
       "~/firebase/*": ["./src/firebase/*"],
       "~/hooks/*": ["src/app/_hooks/*"],
-      "~/lib/*": ["src/app/_lib/*"]
+      "~/lib/*": ["src/app/_lib/*"],
+      "@admin-shad-template/ui": ["../../packages/ui/src"]
     },
     "skipLibCheck": true
   },

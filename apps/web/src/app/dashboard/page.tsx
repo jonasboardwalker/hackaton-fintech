@@ -1,60 +1,31 @@
-"use client";
+import type { Metadata } from "next"
+import { DashboardHeader } from "@admin-shad-template/ui"
+import { DashboardShell } from "@admin-shad-template/ui"
+import { Overview } from "@admin-shad-template/ui"
+import { RulesSummary } from "@admin-shad-template/ui"
+import { AlertsSummary } from "@admin-shad-template/ui"
+import { TransactionWorldMap } from "@admin-shad-template/ui"
 
-import { api } from "~/trpc/react";
-import { useState } from "react";
+export const metadata: Metadata = {
+  title: "Dashboard | TrustLimit",
+  description: "Smart Transaction Throttling for Fintech companies",
+}
 
-const AdminDashboard = () => {
-  const [amount, setAmount] = useState<number>(0);
-  const checkTransaction = api.transaction.checkTransactionFromApp.useMutation();
-
-  const handleCheckTransaction = () => {
-    checkTransaction.mutate({
-      amount,
-      metadata: {
-        description: "Test transaction",
-        category: "test",
-      },
-      clientId: "abc", // TODO: Replace with actual client ID
-    });
-  };
-
+export default function DashboardPage() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-            Amount
-          </label>
-          <input
-            type="number"
-            id="amount"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            min="0"
-            step="0.01"
-          />
-        </div>
-
-        <button
-          onClick={handleCheckTransaction}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          disabled={checkTransaction.isPending}
-        >
-          {checkTransaction.isPending ? "Checking..." : "Check Transaction"}
-        </button>
-
-        {checkTransaction.data && (
-          <div className="mt-4 p-4 border rounded-md">
-            <p className="font-medium">Status: {checkTransaction.data.status}</p>
-            <p className="text-gray-600">{checkTransaction.data.message}</p>
-          </div>
-        )}
+    <DashboardShell>
+      <DashboardHeader heading="Dashboard" text="Monitor and manage transaction controls in real-time." />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <RulesSummary />
+        <AlertsSummary />
       </div>
-    </div>
-  );
-};
+      <div className="grid gap-4 md:grid-cols-1">
+        <Overview className="col-span-1" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-1">
+        <TransactionWorldMap className="col-span-1" />
+      </div>
+    </DashboardShell>
+  )
+}
 
-export default AdminDashboard;

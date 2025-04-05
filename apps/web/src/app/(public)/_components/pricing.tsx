@@ -1,5 +1,5 @@
 import { Separator, Button, Badge } from "@admin-shad-template/ui";
-import { cn } from "@admin-shad-template/ui/utils";
+import { cn } from "@admin-shad-template/ui";
 import { CircleCheck } from "lucide-react";
 
 const plans = [

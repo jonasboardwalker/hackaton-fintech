@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { cn } from "@admin-shad-template/ui/utils";
 import { Toaster } from "@admin-shad-template/ui";
 import { TRPCReactProvider } from "~/trpc/react";
 import "@admin-shad-template/ui/globals.css";
 
 import { ThemeProvider } from "next-themes";
 import { META_THEME_COLORS } from "~/app/_hooks/use-meta-color";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Admin ShadCN template",
@@ -45,10 +42,6 @@ export default async function RootLayout({
           />
         </head>
         <body
-          className={cn(
-            "bg-background overscroll-none font-sans antialiased",
-            inter.className,
-          )}
         >
           <ThemeProvider
             attribute="class"
