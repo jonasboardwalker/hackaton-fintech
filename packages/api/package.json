@@ -1,0 +1,24 @@
+{
+  "name": "@admin-shad-template/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./src/generated/index.ts",
+  "exports": {
+    "./generated": {
+      "types": "./src/generated/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./src/generated"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@admin-shad-template/typescript-config": "workspace:*",
+    "@types/node": "^22.13.5",
+    "typescript": "^5.7.3"
+  }
+} 

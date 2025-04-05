@@ -347,6 +347,22 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(zod@3.24.2)
 
+  packages/api:
+    dependencies:
+      axios:
+        specifier: ^1.7.9
+        version: 1.7.9
+    devDependencies:
+      '@admin-shad-template/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.13.5
+        version: 22.13.5
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':

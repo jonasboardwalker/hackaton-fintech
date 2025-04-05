@@ -1,0 +1,11 @@
+{
+  "extends": "@admin-shad-template/typescript-config/base.json",
+  "include": ["src", "scripts"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+} 
