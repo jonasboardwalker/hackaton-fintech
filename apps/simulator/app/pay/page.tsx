@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/card";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { checkTransaction } from "@/lib/transaction-service";
 import { useDevTools } from "@/context/dev-tools-context";
+import { trustClient } from "@/lib/trust-limit-client";
 
 // Define a Zod schema for the form data.
 const formSchema = z.object({
@@ -45,14 +45,13 @@ export default function PaymentScreen() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     try {
-      const result = await checkTransaction({
+      const result = await trustClient.checkTx({
         amount: Number.parseFloat(data.amount),
-        recipient: data.recipient,
-        purpose: data.purpose,
-        ...devOverrides,
+        clientId: "1",
+        metadata: { location: devOverrides.location },
       });
 
-      if (result.status === "approved") {
+      if (result.status === "allowed") {
         toast({
           title: "Transaction Approved!",
           description: "Your payment has been processed successfully.",
@@ -63,7 +62,7 @@ export default function PaymentScreen() {
           variant: "destructive",
           title: "Transaction Denied",
           description:
-            result.reason || "Your transaction could not be processed.",
+            result.message || "Your transaction could not be processed.",
         });
       }
     } catch (error) {

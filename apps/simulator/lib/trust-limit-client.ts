@@ -1,15 +1,8 @@
-import process from "node:process";
-import { DefaultService, OpenAPI } from "@admin-shad-template/api";
+import { AppConfig, initializeApp } from "@admin-shad-template/api";
 
-OpenAPI.BASE = process.env.TRUST_LIMIT_BASE_URL || "";
-OpenAPI.HEADERS = {
-  "x-api-key": process.env.TRUST_LIMIT_API_KEY || "",
+const config: AppConfig = {
+  apiKey: process.env.NEXT_PUBLIC_TRUST_LIMIT_API_KEY || "",
+  serviceUrl: process.env.NEXT_PUBLIC_TRUST_SERVICE_URL || "",
 };
 
-export function authorizeTx(
-  requestBody: Parameters<
-    typeof DefaultService.postApiTransactionsAuthorize
-  >[0],
-): ReturnType<typeof DefaultService.postApiTransactionsAuthorize> {
-  return DefaultService.postApiTransactionsAuthorize(requestBody);
-}
+export const trustClient = initializeApp(config);
