@@ -19,6 +19,7 @@
   "devDependencies": {
     "@admin-shad-template/typescript-config": "workspace:*",
     "@types/node": "^22.13.5",
+    "form-data": "^4.0.2",
     "typescript": "^5.7.3"
   }
-} 
+}
