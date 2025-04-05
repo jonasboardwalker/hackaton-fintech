@@ -6,6 +6,7 @@ import {
   Overview,
   RulesSummary,
 } from "@admin-shad-template/ui";
+import { TransactionWorldMap } from "../_components/dashboard/transaction-world-map";
 
 export const metadata: Metadata = {
   title: "Dashboard | TrustLimit",
@@ -23,8 +24,9 @@ export default function DashboardPage() {
         <RulesSummary />
         <AlertsSummary />
       </div>
-      <div className="grid gap-4 md:grid-cols-1">
+      <div className="grid gap-4 md:grid-cols-2">
         <Overview className="col-span-1" />
+        <TransactionWorldMap className="col-span-1" />
       </div>
     </DashboardShell>
   );
