@@ -1,1 +1,6 @@
-export { default } from "@admin-shad-template/ui/postcss.config";
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+export default config;
