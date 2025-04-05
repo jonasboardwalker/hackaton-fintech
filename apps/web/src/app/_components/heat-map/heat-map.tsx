@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useMemo } from "react";
-import Map, { Source, Layer } from "react-map-gl/mapbox";
+import Map, {
+  Source,
+  Layer,
+  GeoJSONSourceSpecification,
+} from "react-map-gl/mapbox";
 import { faultyTransactions } from "./heat-map.mock";
 import { heatmapLayer } from "./map-style";
 import { useTheme } from "next-themes";
@@ -10,7 +14,7 @@ import { filterTransactionsWithValidLocation } from "~/app/_lib/filter-transatio
 export default function FaultyTransactionsMap() {
   const { resolvedTheme } = useTheme();
 
-  const geojson = useMemo(
+  const geojson: GeoJSONSourceSpecification["data"] = useMemo(
     () => ({
       type: "FeatureCollection",
       features: filterTransactionsWithValidLocation(faultyTransactions).map(
