@@ -1,73 +1,81 @@
-"use client"
+"use client";
 
-import type React from "react"
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Loader2, ArrowLeft } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { checkTransaction } from "@/lib/transaction-service";
+import { useDevTools } from "@/context/dev-tools-context";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
-import { Loader2, ArrowLeft } from "lucide-react"
-import { checkTransaction } from "@/lib/transaction-service"
-import { useDevTools } from "@/context/dev-tools-context"
-import Link from "next/link"
+// Define a Zod schema for the form data.
+const formSchema = z.object({
+  amount: z.string().nonempty("Amount is required"),
+  recipient: z.string().nonempty("Recipient is required"),
+  purpose: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 export default function PaymentScreen() {
-  const [amount, setAmount] = useState("")
-  const [recipient, setRecipient] = useState("")
-  const [purpose, setPurpose] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
-  const router = useRouter()
-  const { devOverrides } = useDevTools()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver: zodResolver(formSchema) });
+  const router = useRouter();
+  const { toast } = useToast();
+  const { devOverrides } = useDevTools();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!amount || !recipient) {
-      toast({
-        variant: "destructive",
-        title: "Missing information",
-        description: "Please fill in all required fields",
-      })
-      return
-    }
-
-    setIsLoading(true)
-
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setIsLoading(true);
     try {
       const result = await checkTransaction({
-        amount: Number.parseFloat(amount),
-        recipient,
-        purpose,
+        amount: Number.parseFloat(data.amount),
+        recipient: data.recipient,
+        purpose: data.purpose,
         ...devOverrides,
-      })
+      });
 
       if (result.status === "approved") {
         toast({
           title: "Transaction Approved!",
           description: "Your payment has been processed successfully.",
-        })
-        setTimeout(() => router.push("/"), 1500)
+        });
+        setTimeout(() => router.push("/"), 1500);
       } else {
         toast({
           variant: "destructive",
           title: "Transaction Denied",
-          description: result.reason || "Your transaction could not be processed.",
-        })
+          description:
+            result.reason || "Your transaction could not be processed.",
+        });
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container px-4 py-6 max-w-md mx-auto">
@@ -83,9 +91,11 @@ export default function PaymentScreen() {
       <Card className="shadow-md">
         <CardHeader>
           <CardTitle>Payment Details</CardTitle>
-          <CardDescription>Enter the details for your transaction</CardDescription>
+          <CardDescription>
+            Enter the details for your transaction
+          </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="amount">Amount (€)</Label>
@@ -93,28 +103,40 @@ export default function PaymentScreen() {
                 id="amount"
                 type="number"
                 placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
                 className="text-2xl"
+                {...register("amount")}
               />
+              {errors.amount && (
+                <p className="text-xs text-destructive">
+                  {errors.amount.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="recipient">Recipient</Label>
               <Input
                 id="recipient"
                 placeholder="Name or email"
-                value={recipient}
-                onChange={(e) => setRecipient(e.target.value)}
+                {...register("recipient")}
               />
+              {errors.recipient && (
+                <p className="text-xs text-destructive">
+                  {errors.recipient.message}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="purpose">Purpose (optional)</Label>
               <Input
                 id="purpose"
                 placeholder="What's this payment for?"
-                value={purpose}
-                onChange={(e) => setPurpose(e.target.value)}
+                {...register("purpose")}
               />
+              {errors.purpose && (
+                <p className="text-xs text-destructive">
+                  {errors.purpose.message}
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter>
@@ -132,6 +154,5 @@ export default function PaymentScreen() {
         </form>
       </Card>
     </div>
-  )
+  );
 }
-
