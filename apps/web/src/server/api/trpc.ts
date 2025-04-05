@@ -12,7 +12,8 @@ import { ZodError } from "zod";
 import { auth } from "@clerk/nextjs/server";
 
 import { db } from "./../../server/db";
-import type { User } from "@prisma/client";
+import type { Client, User } from "@prisma/client";
+import { generateApiKey } from "~/utils/common";
 
 /**
  * 1. CONTEXT
@@ -130,6 +131,7 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
     where: { clerkId: ctx.auth.userId },
     create: {
       clerkId: ctx.auth.userId,
+      apiKey: generateApiKey(),
     },
     update: {},
   });
@@ -162,12 +164,11 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
     });
   }
 
-  const client = await ctx.db.client.findUnique({
+  const user = await ctx.db.user.findUnique({
     where: { apiKey },
-    include: { user: true },
   });
 
-  if (!client || !client.isActive) {
+  if (!user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Invalid or inactive API key",
@@ -177,8 +178,7 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
-      client,
-      user: client.user,
+      user,
     } as ApiKeyContext,
   });
 });

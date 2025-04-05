@@ -4,23 +4,24 @@ generator client {
 
 datasource db {
   provider     = "postgresql"
-  url          = env("POSTGRES_PRISMA_URL")      // Pooled connection
+  url          = env("POSTGRES_PRISMA_URL") // Pooled connection
   directUrl    = env("POSTGRES_URL_NON_POOLING") // Direct connection
   relationMode = "prisma"
 }
 
 model User {
-  id        String    @id @default(uuid())
-  clerkId   String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  clerkId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  apiKey    String   @unique
 
   // Relations
-  clients    Client[]
-  rules       Rule[]
-  transactions Transaction[]
-  alerts      Alert[]
-  suggestions Suggestion[]
+  clients        Client[]
+  rules          Rule[]
+  transactions   Transaction[]
+  alerts         Alert[]
+  suggestions    Suggestion[]
   dashboardStats DashboardStats[]
 
   @@index([clerkId])
@@ -28,37 +29,35 @@ model User {
 }
 
 model Client {
-  id        String          @id @default(uuid())
-  email     String          @unique
+  id        String   @id @default(uuid())
+  email     String   @unique
   role      String
-  apiKey    String          @unique
-  isActive  Boolean         @default(true)
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  userId    String
-  user      User            @relation(fields: [userId], references: [id])
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
   Transactions Transaction[]
   Alerts       Alert[]
-  
+
   @@index([role])
   @@index([createdAt])
   @@index([userId])
 }
 
 model Rule {
-  id          String         @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
-  parameters  Json           // Contains all rule parameters (thresholds, time windows, geo restrictions, etc.)
-  action      String         // "deny", "alert", "allow"
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  parameters  Json // Contains all rule parameters (thresholds, time windows, geo restrictions, etc.)
+  action      String // "deny", "alert", "allow"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
   userId      String
-  user        User           @relation(fields: [userId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
   Alerts      Alert[]
   Suggestions Suggestion[]
 
@@ -67,23 +66,23 @@ model Rule {
 }
 
 model Transaction {
-  id          String     @id @default(uuid())
-  createdAt   DateTime   @default(now())
-  
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
   // References
-  userId      String
-  user        User       @relation(fields: [userId], references: [id])
-  clientId    String
-  client      Client     @relation(fields: [clientId], references: [id])
-  
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
   // Transaction details
-  amount      Float
-  status      String     // "allowed", "denied", "alerted"
-  metadata    Json       // Contains all transaction metadata (IP, location, device info, currency, etc.)
-  
+  amount   Float
+  status   String // "allowed", "denied", "alerted"
+  metadata Json // Contains all transaction metadata (IP, location, device info, currency, etc.)
+
   // Related alerts
-  Alerts      Alert[]
-  
+  Alerts Alert[]
+
   @@index([createdAt])
   @@index([userId])
   @@index([clientId])
@@ -91,25 +90,25 @@ model Transaction {
 }
 
 model Alert {
-  id            String      @id @default(uuid())
-  createdAt     DateTime    @default(now())
-  resolvedAt    DateTime?
-  status        String      // "open", "resolved"
-  resolution    String?     // "approved", "rejected"
-  notes         String?
-  
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+  status     String // "open", "resolved"
+  resolution String? // "approved", "rejected"
+  notes      String?
+
   // References
-  userId        String
-  user          User        @relation(fields: [userId], references: [id])
-  clientId      String
-  client        Client      @relation(fields: [clientId], references: [id])
-  
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
   transactionId String
-  transaction   Transaction  @relation(fields: [transactionId], references: [id])
-  
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+
   // Many-to-many relation with rules
-  rules         Rule[]
-  
+  rules Rule[]
+
   @@index([createdAt])
   @@index([status])
   @@index([userId])
@@ -118,22 +117,22 @@ model Alert {
 }
 
 model Suggestion {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now())
-  
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
   // References
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
-  ruleId      String
-  rule        Rule        @relation(fields: [ruleId], references: [id])
-  
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  ruleId String
+  rule   Rule   @relation(fields: [ruleId], references: [id])
+
   // Suggestion details
-  type        String      // "threshold", "time", "geo", "velocity"
+  type        String // "threshold", "time", "geo", "velocity"
   description String
-  confidence  Float       // 0-1 confidence score
-  applied     Boolean     @default(false)
-  changes     Json        // Contains the suggested changes to the rule parameters
-  
+  confidence  Float // 0-1 confidence score
+  applied     Boolean @default(false)
+  changes     Json // Contains the suggested changes to the rule parameters
+
   @@index([createdAt])
   @@index([userId])
   @@index([ruleId])
@@ -141,27 +140,27 @@ model Suggestion {
 }
 
 model DashboardStats {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now())
-  
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
   // References
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
-  
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
   // Daily stats
   totalTransactions Int
   totalAmount       Float
   allowedCount      Int
   deniedCount       Int
   alertedCount      Int
-  
+
   // Alert stats
-  openAlerts        Int
-  resolvedAlerts    Int
-  
+  openAlerts     Int
+  resolvedAlerts Int
+
   // Rule stats
-  activeRules       Int
-  
+  activeRules Int
+
   @@index([createdAt])
   @@index([userId])
 }
