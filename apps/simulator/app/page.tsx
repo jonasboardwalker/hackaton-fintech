@@ -12,8 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { mockTransactions } from "@/lib/mock-data";
-import { TransactionCard } from "@/components/transaction-card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollableTransactions } from "@/components/scrollable-transactions";
 
 type TransactionMetadata = {
   // Transaction core
@@ -42,7 +41,7 @@ type TransactionMetadata = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-[calc(100svh-theme(space.20))] overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-none p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -108,22 +107,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative flex-1 px-4 pb-4 overflow-hidden">
-        {/* Top gradient overlay */}
-        <div className="pointer-events-none absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-background to-transparent z-10"></div>
-
-        {/* Scrollable content */}
-        <ScrollArea data-state="hidden" className="h-full">
-          <div className="space-y-4">
-            {mockTransactions.map((transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
-            ))}
-          </div>
-        </ScrollArea>
-
-        {/* Bottom gradient overlay */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-background to-transparent z-10"></div>
-      </div>
+      <ScrollableTransactions transactions={mockTransactions} />
     </div>
   );
 }

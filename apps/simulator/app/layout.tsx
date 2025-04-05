@@ -54,10 +54,12 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
-        className={`${jakarta.variable} font-sans flex flex-col min-h-[100dvh]`}
+        className={`${jakarta.variable} font-sans flex flex-col h-screen max-h-svh`}
       >
         <Providers>
-          <main className="flex-1">{children}</main>
+          <main className="h-[calc(100%-theme(space.20))] overflow-y-scroll">
+            {children}
+          </main>
           <BottomNavigation />
         </Providers>
       </body>
