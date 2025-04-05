@@ -40,18 +40,6 @@ export default function BottomNavigation() {
         </Link>
 
         <Link
-          href="/spending"
-          className="flex flex-col items-center justify-center w-full h-full pb-10"
-        >
-          <div
-            className={`flex flex-col items-center justify-center ${isActive("/spending") ? "text-primary" : "text-muted-foreground"}`}
-          >
-            <BarChart3 className="h-5 w-5 mb-1" />
-            <span className="text-xs">Spending</span>
-          </div>
-        </Link>
-
-        <Link
           href="/profile"
           className="flex flex-col items-center justify-center w-full h-full pb-10"
         >
