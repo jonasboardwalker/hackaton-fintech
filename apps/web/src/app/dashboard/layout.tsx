@@ -1,6 +1,7 @@
 import type React from "react";
 import { DashboardNav, MainNav, MobileNav } from "@admin-shad-template/ui";
 import { UserButton } from "@clerk/nextjs";
+import { ModeSwitcher } from "../_components/mode-switcher";
 
 export default function DashboardLayout({
   children,
@@ -12,7 +13,8 @@ export default function DashboardLayout({
       <header className="bg-background sticky top-0 z-40 border-b">
         <div className="container flex h-16 items-center justify-between py-4">
           <MainNav />
-          <div className="hidden md:flex">
+          <div className="hidden gap-x-4 md:flex">
+            <ModeSwitcher />
             <UserButton />
           </div>
           <MobileNav />
