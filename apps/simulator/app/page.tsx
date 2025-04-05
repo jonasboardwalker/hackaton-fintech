@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { mockTransactions } from "@/lib/mock-data";
 import { TransactionCard } from "@/components/transaction-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TransactionMetadata = {
   // Transaction core
@@ -41,55 +42,55 @@ type TransactionMetadata = {
 
 export default function Home() {
   return (
-    <div className="container px-4 py-6 space-y-6 max-w-md mx-auto">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Welcome back</h1>
-          <p className="text-muted-foreground">Your financial dashboard</p>
-        </div>
-        <Avatar>
-          <AvatarImage src="/placeholder.svg" alt="Avatar" />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
-      </div>
-
-      <Card className="shadow-md">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">
-            Available Balance
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold">€4,750.00</div>
-          <div className="flex items-center mt-1 text-xs text-muted-foreground">
-            <Badge variant="outline" className="mr-1">
-              Junior
-            </Badge>
-            Daily limit: €1,000
+    <div className="flex flex-col h-[calc(100svh-theme(space.20))] overflow-hidden">
+      <div className="flex-none p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Welcome back</h1>
+            <p className="text-muted-foreground">Your financial dashboard</p>
           </div>
-        </CardContent>
-      </Card>
+          <Avatar>
+            <AvatarImage src="/placeholder.svg" alt="Avatar" />
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+        </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <Link href="/pay" className="block">
+        <Card className="shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">
+              Available Balance
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">€4,750.00</div>
+            <div className="flex items-center mt-1 text-xs text-muted-foreground">
+              <Badge variant="outline" className="mr-1">
+                Junior
+              </Badge>
+              Daily limit: €1,000
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-3 gap-3">
+          <Link href="/pay" className="block">
+            <Button
+              className="w-full h-20 flex flex-col group hover:bg-primary/10 hover:text-foreground hover:border-primary"
+              variant="outline"
+            >
+              <DollarSign className="h-5 w-5 mb-1 text-primary" />
+              <span className="text-xs">Send</span>
+            </Button>
+          </Link>
+
           <Button
-            className="w-full h-20 flex flex-col group hover:bg-primary/10 hover:text-foreground hover:border-primary"
+            className="w-full h-20 flex flex-col group hover:bg-secondary/10 hover:text-foreground hover:border-secondary"
             variant="outline"
           >
-            <DollarSign className="h-5 w-5 mb-1 text-primary" />
-            <span className="text-xs">Send</span>
+            <CreditCard className="h-5 w-5 mb-1 text-secondary" />
+            <span className="text-xs">Cards</span>
           </Button>
-        </Link>
 
-        <Button
-          className="w-full h-20 flex flex-col group hover:bg-secondary/10 hover:text-foreground hover:border-secondary"
-          variant="outline"
-        >
-          <CreditCard className="h-5 w-5 mb-1 text-secondary" />
-          <span className="text-xs">Cards</span>
-        </Button>
-
-        <Link href="/spending" className="block">
           <Button
             className="w-full h-20 flex flex-col group hover:bg-accent/10 hover:text-foreground hover:border-accent"
             variant="outline"
@@ -97,22 +98,31 @@ export default function Home() {
             <BarChart3 className="h-5 w-5 mb-1 text-accent" />
             <span className="text-xs">Spending</span>
           </Button>
-        </Link>
-      </div>
-
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-2xl font-bold">Recent Activity</h1>
-        <p className="text-sm text-gray-500">
-          Your recent transactions and activity
-        </p>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="space-y-4">
-          {mockTransactions.map((transaction) => (
-            <TransactionCard key={transaction.id} transaction={transaction} />
-          ))}
         </div>
+
+        <div className="flex flex-col gap-y-1">
+          <h2 className="text-xl font-bold">Recent Activity</h2>
+          <p className="text-sm text-gray-500">
+            Your recent transactions and activity
+          </p>
+        </div>
+      </div>
+
+      <div className="relative flex-1 px-4 pb-4 overflow-hidden">
+        {/* Top gradient overlay */}
+        <div className="pointer-events-none absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-background to-transparent z-10"></div>
+
+        {/* Scrollable content */}
+        <ScrollArea data-state="hidden" className="h-full">
+          <div className="space-y-4">
+            {mockTransactions.map((transaction) => (
+              <TransactionCard key={transaction.id} transaction={transaction} />
+            ))}
+          </div>
+        </ScrollArea>
+
+        {/* Bottom gradient overlay */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-background to-transparent z-10"></div>
       </div>
     </div>
   );

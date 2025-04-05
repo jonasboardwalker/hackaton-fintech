@@ -13,7 +13,7 @@ export default function BottomNavigation() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 border-t bg-background z-50 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 border-t bg-background z-50 shadow-lg h-20">
       <div className="flex justify-around items-center max-w-md mx-auto pt-2">
         <Link
           href="/"
