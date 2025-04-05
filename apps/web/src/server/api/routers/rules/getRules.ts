@@ -1,12 +1,12 @@
 import { privateProcedure } from "../../trpc";
 
-export const getTransactions = privateProcedure
+export const getRules = privateProcedure
   .query(async ({ ctx }) => {
     if (!ctx.user) {
       throw new Error("Not authorized");
     }
 
-    const transactions = await ctx.db.transaction.findMany({
+    const rules = await ctx.db.rule.findMany({
       where: {
         userId: ctx.user.id,
       },
@@ -15,5 +15,5 @@ export const getTransactions = privateProcedure
       },
     });
 
-    return transactions;
+    return rules;
   }); 
