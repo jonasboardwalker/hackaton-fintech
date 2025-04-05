@@ -1,10 +1,12 @@
-import { DefaultService, OpenAPI } from "@/generated";
+import { DefaultService, OpenAPI } from "./generated";
+import { AuthorizeParams } from "./types";
 
 export function createTrustLimitClient(token: string) {
   OpenAPI.BASE = "/";
   OpenAPI.TOKEN = token;
 
   return {
-    authorize: DefaultService.postApiTransactionsAuthorize,
+    authorize: (...args: AuthorizeParams) =>
+      DefaultService.postApiTransactionsAuthorize(...args),
   };
 }
