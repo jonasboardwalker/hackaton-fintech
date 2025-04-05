@@ -1,5 +1,5 @@
 import { Transaction } from "@/components/transaction-card";
-import { addDays, subDays, subHours, subMinutes } from "date-fns";
+import { subDays, subHours, subMinutes } from "date-fns";
 
 // Generate a random amount between min and max
 const randomAmount = (min: number, max: number) => {
@@ -231,7 +231,7 @@ export const generateRandomTransactions = (count: number): Transaction[] => {
     const currency = "EUR";
     const timestamp = subMinutes(
       new Date(),
-      randomAmount(5, 60 * 24 * 7)
+      randomAmount(5, 60 * 24 * 7),
     ).toISOString();
     const paymentMethod = Math.random() > 0.7 ? "bank_transfer" : "card";
     const status =
@@ -266,6 +266,6 @@ export const generateRandomTransactions = (count: number): Transaction[] => {
   }
 
   return transactions.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );
 };

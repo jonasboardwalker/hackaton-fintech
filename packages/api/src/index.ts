@@ -1,2 +1,1 @@
-export * from './setup';
-export * from './generated'
+export * from './generated';
