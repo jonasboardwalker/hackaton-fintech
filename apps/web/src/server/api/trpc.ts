@@ -101,10 +101,20 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
-const isAuthenticated = t.middleware(({ ctx, next }) => {
+const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   if (!ctx.auth?.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  // Get or create user
+  const user = await ctx.db.user.upsert({
+    where: { clerkId: ctx.auth.userId },
+    create: {
+      clerkId: ctx.auth.userId,
+    },
+    update: {},
+  });
+
   return next({
     ctx: {
       ...ctx,
@@ -112,6 +122,7 @@ const isAuthenticated = t.middleware(({ ctx, next }) => {
         ...ctx.auth,
         userId: ctx.auth.userId,
       },
+      user,
     },
   });
 });
@@ -132,10 +143,9 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
     });
   }
 
-  // Example: search the 'Client' table for a record with this apiKey
-  // Adjust to your own DB logic
   const client = await ctx.db.client.findUnique({
     where: { apiKey },
+    include: { user: true },
   });
 
   if (!client || !client.isActive) {
@@ -145,8 +155,13 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
     });
   }
 
-  // If valid, proceed
-  return next();
+  return next({
+    ctx: {
+      ...ctx,
+      client,
+      user: client.user,
+    },
+  });
 });
 
 /**

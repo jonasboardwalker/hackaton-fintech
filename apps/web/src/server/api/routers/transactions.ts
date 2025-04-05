@@ -24,7 +24,10 @@ export const transactionRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if (!ctx.client) {
-        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid API key" });
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Not authorized",
+        });
       }
 
       // Example logic: if "amount > 1000", deny transaction.
@@ -35,7 +38,7 @@ export const transactionRouter = createTRPCRouter({
       // Create transaction in DB
       const transaction = await ctx.db.transaction.create({
         data: {
-          userId: ctx.client.userId,
+          userId: ctx.user.id,
           clientId: ctx.client.id,
           amount,
           status,
