@@ -9,6 +9,27 @@ import {
   apiKeyProcedure,
 } from "../trpc";
 
+// Define schemas that can be reused
+export const transactionInputSchema = z.object({
+  amount: z.number().positive(),
+  metadata: z.record(z.unknown()).optional(),
+  clientId: z.string(),
+});
+
+export const transactionOutputSchema = z.object({
+  status: z.enum(["allowed", "denied"]),
+  transaction: z.object({
+    id: z.string(),
+    userId: z.string(),
+    clientId: z.string(),
+    amount: z.number(),
+    status: z.string(),
+    metadata: z.record(z.unknown()),
+    createdAt: z.date(),
+  }),
+  message: z.string(),
+});
+
 export const transactionRouter = createTRPCRouter({
   /**
    * checkTransaction
@@ -16,13 +37,8 @@ export const transactionRouter = createTRPCRouter({
    *    - Good for external B2B use cases.
    */
   checkTransaction: apiKeyProcedure
-    .input(
-      z.object({
-        amount: z.number().positive(),
-        metadata: z.record(z.unknown()).optional(),
-        clientId: z.string(),
-      }),
-    )
+    .input(transactionInputSchema)
+    .output(transactionOutputSchema)
     .mutation(async ({ ctx, input }) => {
       console.log("Checking transaction... ", input);
       if (!ctx.user) {
@@ -53,7 +69,10 @@ export const transactionRouter = createTRPCRouter({
 
       return {
         status,
-        transaction,
+        transaction: {
+          ...transaction,
+          metadata: transaction.metadata as Record<string, unknown>,
+        },
         message:
           status === "denied"
             ? `Transaction denied, amount exceeds $1000.`
