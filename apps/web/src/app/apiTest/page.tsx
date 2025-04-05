@@ -12,8 +12,7 @@ const ApiTest = () => {
     checkTransaction.mutate({
       amount,
       metadata: {
-        description: "Test transaction",
-        category: "test",
+        location: "Prague",
       },
       clientId: "abc", // TODO: Replace with actual client ID
     });

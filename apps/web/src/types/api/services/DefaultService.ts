@@ -15,19 +15,25 @@ export class DefaultService {
     public static postApiTransactionsAuthorize(
         requestBody: {
             amount: number;
-            currency: string;
-            description?: string;
-            metadata?: Record<string, any>;
+            metadata: {
+                location?: string;
+            };
+            clientId: string;
         },
     ): CancelablePromise<{
-        id: string;
-        status: 'PENDING' | 'COMPLETED' | 'FAILED';
-        amount: number;
-        currency: string;
-        description?: string;
-        metadata?: Record<string, any>;
-        createdAt: string;
-        updatedAt: string;
+        status: 'allowed' | 'denied';
+        transaction: {
+            id: string;
+            userId: string;
+            clientId: string;
+            amount: number;
+            status: string;
+            metadata: {
+                location?: string;
+            };
+            createdAt: string;
+        };
+        message: string;
     }> {
         return __request(OpenAPI, {
             method: 'POST',

@@ -2,9 +2,9 @@ import { writeFileSync } from "fs";
 import { join } from "path";
 import { createDocument } from "zod-openapi";
 import {
-  transactionInputSchema,
-  transactionOutputSchema,
-} from "~/server/api/routers/schemas";
+  checkTransactionInputSchema,
+  checkTransactionOutputSchema
+} from "~/server/api/routers/transactions/checkTransaction.schema";
 
 const openapi = createDocument({
   openapi: "3.0.0",
@@ -20,7 +20,7 @@ const openapi = createDocument({
           required: true,
           content: {
             "application/json": {
-              schema: transactionInputSchema,
+              schema: checkTransactionInputSchema,
             },
           },
         },
@@ -29,7 +29,7 @@ const openapi = createDocument({
             description: "Transaction authorization result",
             content: {
               "application/json": {
-                schema: transactionOutputSchema,
+                schema: checkTransactionOutputSchema,
               },
             },
           },

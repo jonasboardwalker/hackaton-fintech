@@ -20,22 +20,22 @@
                     "minimum": 0,
                     "exclusiveMinimum": true
                   },
-                  "currency": {
-                    "type": "string",
-                    "minLength": 3,
-                    "maxLength": 3
-                  },
-                  "description": {
-                    "type": "string"
-                  },
                   "metadata": {
                     "type": "object",
-                    "additionalProperties": {}
+                    "properties": {
+                      "location": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "clientId": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "amount",
-                  "currency"
+                  "metadata",
+                  "clientId"
                 ]
               }
             }
@@ -49,50 +49,61 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "string"
-                    },
                     "status": {
                       "type": "string",
                       "enum": [
-                        "PENDING",
-                        "COMPLETED",
-                        "FAILED"
+                        "allowed",
+                        "denied"
                       ]
                     },
-                    "amount": {
-                      "type": "number",
-                      "minimum": 0,
-                      "exclusiveMinimum": true
-                    },
-                    "currency": {
-                      "type": "string",
-                      "minLength": 3,
-                      "maxLength": 3
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "metadata": {
+                    "transaction": {
                       "type": "object",
-                      "additionalProperties": {}
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": "string"
+                        },
+                        "clientId": {
+                          "type": "string"
+                        },
+                        "amount": {
+                          "type": "number"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "properties": {
+                            "location": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "userId",
+                        "clientId",
+                        "amount",
+                        "status",
+                        "metadata",
+                        "createdAt"
+                      ]
                     },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
+                    "message": {
+                      "type": "string"
                     }
                   },
                   "required": [
-                    "id",
                     "status",
-                    "amount",
-                    "currency",
-                    "createdAt",
-                    "updatedAt"
+                    "transaction",
+                    "message"
                   ]
                 }
               }
