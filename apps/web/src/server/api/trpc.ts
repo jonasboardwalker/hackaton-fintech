@@ -12,7 +12,7 @@ import { ZodError } from "zod";
 import { auth } from "@clerk/nextjs/server";
 
 import { db } from "./../../server/db";
-import type { Client, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { generateApiKey } from "~/utils/common";
 
 /**

@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, ArrowLeft } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { checkTransaction } from "@/lib/transaction-service";
 import { useDevTools } from "@/context/dev-tools-context";
 
