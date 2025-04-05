@@ -3,7 +3,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider, useTheme } from "next-themes";
 import { TRPCReactProvider } from "~/trpc/react";
-import { Toaster } from "@admin-shad-template/ui";
+import { Toaster } from "~/components/ui/sonner";
 import React from "react";
 import { dark } from "@clerk/themes";
 

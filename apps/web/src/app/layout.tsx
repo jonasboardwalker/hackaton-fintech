@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "@admin-shad-template/ui/globals.css";
+import "./globals.css";
 
 import { META_THEME_COLORS } from "~/app/_hooks/use-meta-color";
 import { AppProviders } from "./dashboard/providers";

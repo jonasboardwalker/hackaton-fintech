@@ -4,9 +4,9 @@ import {
   AccordionItem,
   AccordionPrimitiveHeader,
   AccordionPrimitiveTrigger,
-} from "@admin-shad-template/ui";
-import { cn } from "@admin-shad-template/ui";
+} from "~/components/ui/accordion";
 import { PlusIcon } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 const faq = [
   {

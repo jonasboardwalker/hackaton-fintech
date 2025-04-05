@@ -1,4 +1,4 @@
-import { Separator } from "@admin-shad-template/ui";
+import { Separator } from "~/components/ui/separator";
 import {
   DribbbleIcon,
   GithubIcon,

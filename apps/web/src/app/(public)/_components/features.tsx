@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@admin-shad-template/ui";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import {
   BookCheck,
   ChartPie,

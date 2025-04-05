@@ -5,7 +5,7 @@ import {
   DashboardShell,
   Overview,
   RulesSummary,
-} from "@admin-shad-template/ui";
+} from "~/components/dashboard";
 import { TransactionWorldMap } from "../_components/dashboard/transaction-world-map";
 
 export const metadata: Metadata = {

@@ -3,7 +3,7 @@ import {
   DashboardHeader,
   DashboardShell,
   TransactionsTable,
-} from "@admin-shad-template/ui";
+} from "~/components/dashboard";
 import { api } from "~/trpc/server";
 
 export const metadata: Metadata = {

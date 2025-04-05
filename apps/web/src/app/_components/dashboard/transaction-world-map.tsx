@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@admin-shad-template/ui";
+} from "~/components/ui/card";
 import FaultyTransactionsMap from "../heat-map/heat-map";
 
 type Props = {

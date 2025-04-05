@@ -1,9 +1,9 @@
 import {
+  Card as UICard,
   CardContent as UIContent,
   CardHeader as UICardHeader,
   CardTitle as UICardTitle,
-  Card as UICard,
-} from "@admin-shad-template/ui";
+} from "~/components/ui/card";
 
 interface Props {
   title?: string;

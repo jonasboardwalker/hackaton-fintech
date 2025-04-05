@@ -1,4 +1,5 @@
-import { Button, Badge } from "@admin-shad-template/ui";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 import { ArrowUpRight, CirclePlay } from "lucide-react";
 import Image from "next/image";
 
