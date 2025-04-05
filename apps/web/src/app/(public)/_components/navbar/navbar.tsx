@@ -1,4 +1,3 @@
-import { Button } from "@admin-shad-template/ui";
 import { Logo } from "../../../_components/logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
@@ -6,6 +5,7 @@ import { ModeSwitcher } from "~/app/_components/mode-switcher";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
 
 const Navbar = async () => {
   return (

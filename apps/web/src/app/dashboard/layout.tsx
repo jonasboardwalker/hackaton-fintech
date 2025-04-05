@@ -1,5 +1,10 @@
 import type React from "react";
-import { DashboardNav, MainNav, UserNav, MobileNav} from "@admin-shad-template/ui";
+import {
+  DashboardNav,
+  MainNav,
+  MobileNav,
+  UserNav,
+} from "~/components/dashboard";
 
 export default function DashboardLayout({
   children,

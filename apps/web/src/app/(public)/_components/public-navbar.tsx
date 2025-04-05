@@ -1,5 +1,6 @@
 import { Logo } from "~/app/_components/logo";
-import { Button, Input } from "@admin-shad-template/ui";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { ROUTES } from "~/app/_lib/routes";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ShoppingCart } from "lucide-react";

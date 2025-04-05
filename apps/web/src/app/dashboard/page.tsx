@@ -5,7 +5,7 @@ import {
   DashboardShell,
   Overview,
   RulesSummary,
-} from "@admin-shad-template/ui";
+} from "~/components/dashboard";
 
 export const metadata: Metadata = {
   title: "Dashboard | TrustLimit",

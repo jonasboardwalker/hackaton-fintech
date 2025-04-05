@@ -1,16 +1,16 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-  Button,
-  VisuallyHidden,
-} from "@admin-shad-template/ui";
 import { Link, Menu } from "lucide-react";
 import { Logo } from "../../../_components/logo";
 import { NavMenu } from "./nav-menu";
 import { SignedOut } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
+import { Button } from "~/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export const NavigationSheet = async () => {
   return (

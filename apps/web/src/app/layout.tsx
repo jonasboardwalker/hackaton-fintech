@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "@admin-shad-template/ui";
+import { Toaster } from "~/components/ui/sonner";
 import { TRPCReactProvider } from "~/trpc/react";
-import "@admin-shad-template/ui/globals.css";
+import "./globals.css";
 
 import { ThemeProvider } from "next-themes";
 import { META_THEME_COLORS } from "~/app/_hooks/use-meta-color";
@@ -40,8 +40,7 @@ export default async function RootLayout({
             }}
           />
         </head>
-        <body
-        >
+        <body>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

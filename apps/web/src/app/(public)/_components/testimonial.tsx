@@ -1,17 +1,16 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@admin-shad-template/ui";
-import { cn } from "@admin-shad-template/ui";
+} from "~/components/ui/carousel";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { cn } from "~/lib/utils";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 const testimonials = [
   {

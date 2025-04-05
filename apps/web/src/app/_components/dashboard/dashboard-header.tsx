@@ -1,9 +1,9 @@
-import { cn } from "@admin-shad-template/ui"
+import { cn } from "~/lib/utils";
 
 interface DashboardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  heading: string
-  text?: string
-  children?: React.ReactNode
+  heading: string;
+  text?: string;
+  children?: React.ReactNode;
 }
 
 export function DashboardHeader({
@@ -14,12 +14,15 @@ export function DashboardHeader({
   ...props
 }: DashboardHeaderProps) {
   return (
-    <div className={cn("flex items-center justify-between px-2", className)} {...props}>
+    <div
+      className={cn("flex items-center justify-between px-2", className)}
+      {...props}
+    >
       <div className="grid gap-1">
         <h1 className="font-heading text-3xl md:text-4xl">{heading}</h1>
-        {text && <p className="text-lg text-muted-foreground">{text}</p>}
+        {text && <p className="text-muted-foreground text-lg">{text}</p>}
       </div>
       {children}
     </div>
-  )
-} 
+  );
+}
