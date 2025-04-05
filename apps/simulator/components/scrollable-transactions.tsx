@@ -52,13 +52,11 @@ export function ScrollableTransactions({
 
   return (
     <div className="relative flex-1 px-4 overflow-hidden" ref={viewportRef}>
-      {/* Top gradient overlay */}
       {showTopGradient && (
         <div className="pointer-events-none absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-background to-transparent z-10"></div>
       )}
 
-      {/* Scrollable content */}
-      <ScrollArea className="h-full">
+      <ScrollArea data-state="hidden" className="h-full">
         <div className="space-y-4 pb-4">
           {transactions.map((transaction) => (
             <TransactionCard key={transaction.id} transaction={transaction} />
@@ -66,7 +64,6 @@ export function ScrollableTransactions({
         </div>
       </ScrollArea>
 
-      {/* Bottom gradient overlay - always show for now to debug */}
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-background to-transparent z-10"></div>
     </div>
   );
