@@ -10,8 +10,8 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-background sticky top-0 z-40 border-b">
-        <div className="container flex h-16 items-center justify-between py-4">
+      <header className="bg-background sticky top-0 z-40 border-b px-8">
+        <div className="flex h-16 items-center justify-between py-4">
           <MainNav />
           <div className="hidden gap-x-4 md:flex">
             <ModeSwitcher />
@@ -20,7 +20,7 @@ export default function DashboardLayout({
           <MobileNav />
         </div>
       </header>
-      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr] lg:grid-cols-[240px_1fr]">
+      <div className="grid flex-1 gap-12 px-8 md:grid-cols-[200px_1fr] lg:grid-cols-[240px_1fr]">
         <aside className="hidden w-[200px] flex-col md:flex lg:w-[240px]">
           <DashboardNav />
         </aside>
