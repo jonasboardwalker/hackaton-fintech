@@ -6,6 +6,7 @@ import {
   Overview,
   RulesSummary,
 } from "@admin-shad-template/ui";
+import FaultyTransactionsMap from "../_components/heat-map/heat-map";
 
 export const metadata: Metadata = {
   title: "Dashboard | TrustLimit",
@@ -23,8 +24,11 @@ export default function DashboardPage() {
         <RulesSummary />
         <AlertsSummary />
       </div>
-      <div className="grid gap-4 md:grid-cols-1">
+      <div className="grid gap-4 md:grid-cols-2">
         <Overview className="col-span-1" />
+        <div className="col-span-1 overflow-hidden rounded-lg">
+          <FaultyTransactionsMap />
+        </div>
       </div>
     </DashboardShell>
   );

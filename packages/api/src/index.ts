@@ -1,3 +1,4 @@
+// file: src/api/index.ts
 import { DefaultService, OpenAPI } from "./generated";
 
 /**
