@@ -3,6 +3,7 @@ import { dashboardRouter } from "~/server/api/routers/dashboard";
 import { alertsRouter } from "~/server/api/routers/alerts";
 
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { rulesRouter } from "~/server/api/routers/rules";
 
 /**
 //  * This is the primary router for your server.
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   transaction: transactionRouter,
   dashboard: dashboardRouter,
   alerts: alertsRouter,
+  rules: rulesRouter,
 });
 
 // export type definition of API
