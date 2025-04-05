@@ -1,16 +1,18 @@
+import { transactionRouter } from "~/server/api/routers/transactions";
+import { dashboardRouter } from "~/server/api/routers/dashboard";
+import { alertsRouter } from "~/server/api/routers/alerts";
+
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
-import { transactionRouter } from "~/server/api/routers/transactions";
-import { rulesRouter } from "~/server/api/routers/rules";
-
 /**
- * This is the primary router for your server.
+//  * This is the primary router for your server.
  *
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
   transaction: transactionRouter,
-  rules: rulesRouter,
+  dashboard: dashboardRouter,
+  alerts: alertsRouter,
 });
 
 // export type definition of API
