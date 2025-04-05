@@ -21,6 +21,10 @@ import { Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { checkTransaction } from "@/lib/transaction-service";
 import { useDevTools } from "@/context/dev-tools-context";
+import {
+  OpenAPI,
+  DefaultService,
+} from "@admin-shad-template/api/src/generated";
 
 // Define a Zod schema for the form data.
 const formSchema = z.object({
@@ -45,14 +49,21 @@ export default function PaymentScreen() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     try {
-      const result = await checkTransaction({
+      OpenAPI.BASE = "http://localhost:3000";
+      OpenAPI.HEADERS = {
+        "x-api-key":
+          "972444b6980194d0b66de5944c8314466e4312991b5319c7dfd59f398869d490",
+      } as Record<string, string>;
+
+      const result = await DefaultService.postApiTransactionsAuthorize({
         amount: Number.parseFloat(data.amount),
-        recipient: data.recipient,
-        purpose: data.purpose,
-        ...devOverrides,
+        clientId: "someId",
+        metadata: {
+          location: "Germany",
+        },
       });
 
-      if (result.status === "approved") {
+      if (result.status === "allowed") {
         toast({
           title: "Transaction Approved!",
           description: "Your payment has been processed successfully.",
@@ -62,8 +73,7 @@ export default function PaymentScreen() {
         toast({
           variant: "destructive",
           title: "Transaction Denied",
-          description:
-            result.reason || "Your transaction could not be processed.",
+          description: "Your transaction could not be processed.",
         });
       }
     } catch (error) {
