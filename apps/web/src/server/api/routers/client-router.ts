@@ -8,18 +8,20 @@ function generateApiKey() {
 
 export const clientRouter = createTRPCRouter({
   createClient: privateProcedure
-    .input(z.object({ name: z.string() }))
+    .input(z.object({ 
+      email: z.string().email(),
+      role: z.string(),
+    }))
     .mutation(async ({ ctx, input }) => {
       const newKey = generateApiKey();
 
-      // Optionally hash newKey before storing
-      // e.g. const hashedKey = await bcrypt.hash(newKey, saltRounds);
-
       const client = await ctx.db.client.create({
         data: {
-          name: input.name,
+          email: input.email,
+          role: input.role,
           apiKey: newKey,
-          // isActive defaults to true
+          isActive: true,
+          userId: ctx.auth.userId,
         },
       });
 

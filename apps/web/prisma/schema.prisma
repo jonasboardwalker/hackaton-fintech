@@ -10,80 +10,158 @@ datasource db {
 }
 
 model User {
-  id        String          @id @default(uuid())
-  email     String          @unique
-  role      String
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id        String    @id @default(uuid())
+  clerkId   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  TransactionLogs TransactionLog[] @relation("UserLogs")
-  
-  @@index([role])
+  // Relations
+  clients    Client[]
+  rules       Rule[]
+  transactions Transaction[]
+  alerts      Alert[]
+  suggestions Suggestion[]
+  dashboardStats DashboardStats[]
+
+  @@index([clerkId])
   @@index([createdAt])
 }
 
 model Client {
   id        String          @id @default(uuid())
-  name      String
+  email     String          @unique
+  role      String
   apiKey    String          @unique
   isActive  Boolean         @default(true)
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 
-  TransactionLogs TransactionLog[] @relation("ClientLogs")
-
-  // Example index if you frequently search by name or createdAt
-  @@index([name])
+  // Relations
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  Transactions Transaction[]
+  Alerts       Alert[]
+  
+  @@index([role])
   @@index([createdAt])
+  @@index([userId])
 }
 
 model Rule {
   id          String         @id @default(uuid())
   name        String
   description String?
-
-  // Throttling fields
-  role        String?        // e.g., "employee"
-  maxCount    Int?           // e.g., 5
-  period      String?        // e.g., "hour", "day"
-  startTime   DateTime?      // e.g., 09:00
-  endTime     DateTime?      // e.g., 17:00
+  parameters  Json           // Contains all rule parameters (thresholds, time windows, geo restrictions, etc.)
   action      String         // "deny", "alert", "allow"
-
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
-  // Relation to logs
-  TransactionLogs TransactionLog[] @relation("RuleLogs")
+  // Relations
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  Alerts      Alert[]
+  Suggestions Suggestion[]
 
-  @@index([role])
   @@index([name])
+  @@index([userId])
 }
 
-
-model TransactionLog {
-  id         String     @id @default(uuid())
-  createdAt  DateTime   @default(now())
-
+model Transaction {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  
   // References
-  userId     String?
-  user       User?      @relation("UserLogs", fields: [userId], references: [id])
-
-  role       String     // role at time of transaction
-  clientId   String?
-  client     Client?    @relation("ClientLogs", fields: [clientId], references: [id])
-
-  ruleId     String?
-  rule       Rule?      @relation("RuleLogs", fields: [ruleId], references: [id])
-
-  amount     Float
-  outcome    String     // "allow", "deny", "alert"
-  reason     String?
-
-  // Indexes for efficient lookups
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  clientId    String
+  client      Client     @relation(fields: [clientId], references: [id])
+  
+  // Transaction details
+  amount      Float
+  status      String     // "allowed", "denied", "alerted"
+  metadata    Json       // Contains all transaction metadata (IP, location, device info, currency, etc.)
+  
+  // Related alerts
+  Alerts      Alert[]
+  
   @@index([createdAt])
   @@index([userId])
   @@index([clientId])
+  @@index([status])
+}
+
+model Alert {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  resolvedAt    DateTime?
+  status        String      // "open", "resolved"
+  resolution    String?     // "approved", "rejected"
+  notes         String?
+  
+  // References
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  clientId      String
+  client        Client      @relation(fields: [clientId], references: [id])
+  
+  transactionId String
+  transaction   Transaction  @relation(fields: [transactionId], references: [id])
+  
+  // Many-to-many relation with rules
+  rules         Rule[]
+  
+  @@index([createdAt])
+  @@index([status])
+  @@index([userId])
+  @@index([clientId])
+  @@index([transactionId])
+}
+
+model Suggestion {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  
+  // References
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  ruleId      String
+  rule        Rule        @relation(fields: [ruleId], references: [id])
+  
+  // Suggestion details
+  type        String      // "threshold", "time", "geo", "velocity"
+  description String
+  confidence  Float       // 0-1 confidence score
+  applied     Boolean     @default(false)
+  changes     Json        // Contains the suggested changes to the rule parameters
+  
+  @@index([createdAt])
+  @@index([userId])
   @@index([ruleId])
-  @@index([role])
+  @@index([type])
+}
+
+model DashboardStats {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  
+  // References
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  
+  // Daily stats
+  totalTransactions Int
+  totalAmount       Float
+  allowedCount      Int
+  deniedCount       Int
+  alertedCount      Int
+  
+  // Alert stats
+  openAlerts        Int
+  resolvedAlerts    Int
+  
+  // Rule stats
+  activeRules       Int
+  
+  @@index([createdAt])
+  @@index([userId])
 }

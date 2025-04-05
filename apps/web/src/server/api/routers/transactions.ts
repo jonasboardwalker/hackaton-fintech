@@ -11,79 +11,53 @@ import {
 
 export const transactionRouter = createTRPCRouter({
   /**
-   * 1. checkTransaction
+   * checkTransaction
    *    - Requires a valid API key in the request headers (x-api-key).
    *    - Good for external B2B use cases.
    */
   checkTransaction: apiKeyProcedure
     .input(
       z.object({
-        userRole: z.string().optional(),
         amount: z.number().positive(),
+        metadata: z.record(z.unknown()).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // Example logic: if "amount > 1000", deny transaction.
-      // Real-world usage might do rule checks or rate-limiting logic here.
-
-      const { amount, userRole = "unknown" } = input;
-      const outcome = amount > 1000 ? "deny" : "allow";
-
-      // Log in DB (TransactionLog table) for auditing
-      await ctx.db.transactionLog.create({
-        data: {
-          role: userRole,
-          amount,
-          outcome,
-          reason: outcome === "deny" ? "Amount exceeds $1000" : null,
-        },
-      });
-
-      return {
-        outcome,
-        message:
-          outcome === "deny"
-            ? `Transaction denied for ${userRole}, amount exceeds $1000.`
-            : `Transaction allowed for ${userRole}.`,
-      };
-    }),
-
-  /**
-   * 2. createTransaction
-   *    - Requires a valid user session via Clerk.
-   *    - Perfect for internal staff or a front-end user who is signed in.
-   */
-  createTransaction: privateProcedure
-    .input(
-      z.object({
-        amount: z.number().positive(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.auth.userId) {
-        // This should never occur if privateProcedure is working,
-        // but we'll add a safety check
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (!ctx.client) {
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid API key" });
       }
 
-      // For demonstration: just store a new "allowed" transaction
-      const transaction = await ctx.db.transactionLog.create({
+      // Example logic: if "amount > 1000", deny transaction.
+      // Real-world usage might do rule checks or rate-limiting logic here.
+      const { amount, metadata = {} } = input;
+      const status = amount > 1000 ? "denied" : "allowed";
+
+      // Create transaction in DB
+      const transaction = await ctx.db.transaction.create({
         data: {
-          userId: ctx.auth.userId,
-          role: "employee", // or fetch from your local User table if you store it
-          amount: input.amount,
-          outcome: "allow",
+          userId: ctx.client.userId,
+          clientId: ctx.client.id,
+          amount,
+          status,
+          metadata: {
+            ...metadata,
+            timestamp: new Date().toISOString(),
+          },
         },
       });
 
       return {
-        success: true,
+        status,
         transaction,
+        message:
+          status === "denied"
+            ? `Transaction denied, amount exceeds $1000.`
+            : `Transaction allowed.`,
       };
     }),
 
   /**
-   * 3. getPublicData
+   * getPublicData
    *    - No authentication required at all.
    *    - You can still read from DB if you want to provide some public info.
    */
