@@ -8,7 +8,8 @@
       "~/firebase/*": ["./src/firebase/*"],
       "~/hooks/*": ["src/app/_hooks/*"],
       "~/lib/*": ["src/app/_lib/*"]
-    }
+    },
+    "skipLibCheck": true
   },
   "include": [
     ".eslintrc.cjs",

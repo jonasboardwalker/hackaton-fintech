@@ -158,7 +158,8 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-export const privateProcedure = t.procedure.use(isAuthenticated);
+export const privateProcedure: typeof t.procedure =
+  t.procedure.use(isAuthenticated);
 
 export const apiKeyProcedure = t.procedure
   .use(timingMiddleware)
