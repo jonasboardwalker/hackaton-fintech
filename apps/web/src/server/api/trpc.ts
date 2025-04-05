@@ -12,6 +12,7 @@ import { ZodError } from "zod";
 import { auth } from "@clerk/nextjs/server";
 
 import { db } from "~/server/db";
+import type { Client, User } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -35,6 +36,16 @@ export const createTRPCContext = async (opts: { headers?: Headers }) => {
 };
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+
+// Extended context types for authenticated and API key procedures
+export interface AuthenticatedContext extends Context {
+  user: User;
+}
+
+export interface ApiKeyContext extends Context {
+  client: Client & { user: User };
+  user: User;
+}
 
 /**
  * 2. INITIALIZATION
@@ -123,7 +134,7 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
         userId: ctx.auth.userId,
       },
       user,
-    },
+    } as AuthenticatedContext,
   });
 });
 
@@ -160,7 +171,7 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
       ...ctx,
       client,
       user: client.user,
-    },
+    } as ApiKeyContext,
   });
 });
 
@@ -173,8 +184,9 @@ const apiKeyMiddleware = t.middleware(async ({ ctx, next }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-export const privateProcedure: typeof t.procedure =
-  t.procedure.use(isAuthenticated);
+export const privateProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(isAuthenticated);
 
 export const apiKeyProcedure = t.procedure
   .use(timingMiddleware)

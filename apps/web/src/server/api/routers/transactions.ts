@@ -20,10 +20,12 @@ export const transactionRouter = createTRPCRouter({
       z.object({
         amount: z.number().positive(),
         metadata: z.record(z.unknown()).optional(),
+        clientId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.client) {
+      console.log("Checking transaction... ", input);
+      if (!ctx.user) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Not authorized",
@@ -32,14 +34,60 @@ export const transactionRouter = createTRPCRouter({
 
       // Example logic: if "amount > 1000", deny transaction.
       // Real-world usage might do rule checks or rate-limiting logic here.
-      const { amount, metadata = {} } = input;
+      const { amount, metadata = {}, clientId } = input;
       const status = amount > 1000 ? "denied" : "allowed";
 
       // Create transaction in DB
       const transaction = await ctx.db.transaction.create({
         data: {
           userId: ctx.user.id,
-          clientId: ctx.client.id,
+          clientId,
+          amount,
+          status,
+          metadata: {
+            ...metadata,
+            timestamp: new Date().toISOString(),
+          },
+        },
+      });
+
+      return {
+        status,
+        transaction,
+        message:
+          status === "denied"
+            ? `Transaction denied, amount exceeds $1000.`
+            : `Transaction allowed.`,
+      };
+    }),
+
+  checkTransactionFromApp: privateProcedure
+    .input(
+      z.object({
+        amount: z.number().positive(),
+        metadata: z.record(z.unknown()).optional(),
+        clientId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log("Checking transaction... ", input);
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Not authorized",
+        });
+      }
+
+      // Example logic: if "amount > 1000", deny transaction.
+      // Real-world usage might do rule checks or rate-limiting logic here.
+      const { amount, metadata = {}, clientId } = input;
+      const status = amount > 1000 ? "denied" : "allowed";
+
+      // Create transaction in DB
+      const transaction = await ctx.db.transaction.create({
+        data: {
+          userId: ctx.user.id,
+          clientId,
           amount,
           status,
           metadata: {

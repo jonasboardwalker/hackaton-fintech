@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { privateProcedure, createTRPCRouter } from "~/server/api/trpc";
 import { randomBytes } from "crypto";
+import { TRPCError } from "@trpc/server";
 
 function generateApiKey() {
   return randomBytes(32).toString("hex");
@@ -13,6 +14,13 @@ export const clientRouter = createTRPCRouter({
       role: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
+      if (!ctx.auth.userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User must be authenticated to create a client",
+        });
+      }
+
       const newKey = generateApiKey();
 
       const client = await ctx.db.client.create({
