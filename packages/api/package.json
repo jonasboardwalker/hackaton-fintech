@@ -6,7 +6,7 @@
   "types": "./src/generated/index.ts",
   "exports": {
     "./generated": {
-      "types": "./src/generated/index.ts"
+      "types": "./src/index.ts"
     }
   },
   "scripts": {
