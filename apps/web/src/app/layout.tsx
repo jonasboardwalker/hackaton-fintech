@@ -1,11 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "@admin-shad-template/ui";
-import { TRPCReactProvider } from "~/trpc/react";
 import "@admin-shad-template/ui/globals.css";
 
-import { ThemeProvider } from "next-themes";
 import { META_THEME_COLORS } from "~/app/_hooks/use-meta-color";
+import { AppProviders } from "./dashboard/providers";
 
 export const metadata: Metadata = {
   title: "Admin ShadCN template",
@@ -25,34 +22,23 @@ export default async function RootLayout({
   // Providing all messages to the client
   // side is the easiest way to get started
   return (
-    <ClerkProvider>
-      <html className="h-dvh md:h-full" suppressHydrationWarning>
-        <head>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
+    <html className="h-dvh md:h-full" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
                     try {
                       if (localStorage.theme === 'dark' || ((!('theme' in localStorage) || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                         document.querySelector('meta[name="theme-color"]').setAttribute('content', '${META_THEME_COLORS.dark}')
                       }
                     } catch (_) {}
                   `,
-            }}
-          />
-        </head>
-        <body
-        >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TRPCReactProvider>{children}</TRPCReactProvider>
-            <Toaster />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          }}
+        />
+      </head>
+      <body>
+        <AppProviders>{children}</AppProviders>
+      </body>
+    </html>
   );
 }

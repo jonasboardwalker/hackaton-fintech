@@ -1,5 +1,6 @@
 import type React from "react";
-import { DashboardNav, MainNav, UserNav, MobileNav} from "@admin-shad-template/ui";
+import { DashboardNav, MainNav, MobileNav } from "@admin-shad-template/ui";
+import { UserButton } from "@clerk/nextjs";
 
 export default function DashboardLayout({
   children,
@@ -12,7 +13,7 @@ export default function DashboardLayout({
         <div className="container flex h-16 items-center justify-between py-4">
           <MainNav />
           <div className="hidden md:flex">
-            <UserNav />
+            <UserButton />
           </div>
           <MobileNav />
         </div>
