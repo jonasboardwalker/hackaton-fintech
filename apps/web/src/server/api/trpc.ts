@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { auth } from "@clerk/nextjs/server";
 
-import { db } from "~/server/db";
-import type { Client, User } from "@prisma/client";
+import { db } from "./../../server/db";
+import type { User } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -43,7 +43,15 @@ export interface AuthenticatedContext extends Context {
 }
 
 export interface ApiKeyContext extends Context {
-  client: Client & { user: User };
+  client: {
+    id: string;
+    email: string;
+    role: string;
+    apiKey: string;
+    isActive: boolean;
+    userId: string;
+    user: User;
+  };
   user: User;
 }
 
