@@ -51,7 +51,7 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "clientId",
     header: ({ column }) => {
       return (
-        <div className="text-right">
+        <div className="text-left">
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -63,14 +63,14 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-right">{row.original.client.email}</div>
+      <div className="pl-3 text-left">{row.original.client.email}</div>
     ),
   },
   {
     accessorKey: "amount",
     header: ({ column }) => {
       return (
-        <div className="text-right">
+        <div className="text-left">
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -82,7 +82,7 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-right">
+      <div className="pl-3 text-left">
         {"$" + Number(row.getValue("amount")).toFixed(2)}
       </div>
     ),
@@ -91,7 +91,7 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "status",
     header: ({ column }) => {
       return (
-        <div className="text-right">
+        <div className="text-left">
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -105,15 +105,9 @@ const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       return (
-        <div className="text-right">
+        <div className="pl-3 text-left">
           <Badge
-            variant={
-              status === "approved"
-                ? "outline"
-                : status === "blocked"
-                  ? "destructive"
-                  : "secondary"
-            }
+            variant={status === "allowed" ? "outline" : "destructive"}
             className="capitalize"
           >
             {status}
@@ -126,7 +120,7 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
-        <div className="text-right">
+        <div className="text-left">
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -138,8 +132,16 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-right">
-        {new Date(row.getValue("createdAt")).toLocaleString()}
+      <div className="pl-3 text-left">
+        {new Date(row.getValue("createdAt")).toLocaleString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        })}
       </div>
     ),
   },
