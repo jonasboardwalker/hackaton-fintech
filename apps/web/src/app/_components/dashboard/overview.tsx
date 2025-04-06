@@ -38,7 +38,7 @@ const chartConfig = {
   },
   mobile: {
     label: "Mobile",
-    color: "var(--chart-2)",
+    color: "var(--destructive)",
   },
 } satisfies ChartConfig;
 
