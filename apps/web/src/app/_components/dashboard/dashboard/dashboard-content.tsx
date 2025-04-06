@@ -19,8 +19,8 @@ export function DashboardContent(props: Props) {
     (total, item) => total + item.count.allowed + item.count.denied,
     0,
   );
-  const totalAlerts = data.reduce(
-    (total, item) => total + item.count.alerted,
+  const pendingAlertsCount = data.reduce(
+    (total, item) => total + item.count.pendingAlerts,
     0,
   );
 
@@ -47,7 +47,7 @@ export function DashboardContent(props: Props) {
       </div>
       <div className="mb-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <TransactionsSummaryCard count={totalTransactions} />
-        <AlertsSummaryCard count={totalAlerts} />
+        <AlertsSummaryCard count={pendingAlertsCount} />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <TransactionsOverviewCard

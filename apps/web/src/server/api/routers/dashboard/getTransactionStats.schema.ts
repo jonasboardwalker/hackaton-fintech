@@ -6,6 +6,7 @@ export const transactionStatsEntrySchema = z.object({
     allowed: z.number(),
     denied: z.number(),
     alerted: z.number(),
+    pendingAlerts: z.number(),
   }),
 });
 

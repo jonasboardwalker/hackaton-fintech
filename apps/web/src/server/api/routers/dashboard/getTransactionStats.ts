@@ -9,6 +9,7 @@ type Stats = {
     allowed: number;
     denied: number;
     alerted: number;
+    pendingAlerts: number;
   };
 };
 
@@ -32,12 +33,24 @@ async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
       _count: true,
     });
 
+    const pendingAlerts = await db.alert.count({
+      where: {
+        userId: userId,
+        status: "open",
+        createdAt: {
+          gte: startOfDay.toJSDate(),
+          lt: startOfDay.plus({ days: 1 }).toJSDate(),
+        },
+      },
+    });
+
     stats.push({
       timestamp: startOfDay.toJSDate(),
       count: {
         allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
         denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
         alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
+        pendingAlerts,
       },
     });
   }
@@ -65,12 +78,24 @@ async function getLast4Weeks(db: PrismaClient, userId: string, now: DateTime) {
       _count: true,
     });
 
+    const pendingAlerts = await db.alert.count({
+      where: {
+        userId: userId,
+        status: "open",
+        createdAt: {
+          gte: startOfWeek.toJSDate(),
+          lt: startOfWeek.plus({ weeks: 1 }).toJSDate(),
+        },
+      },
+    });
+
     stats.push({
       timestamp: startOfWeek.toJSDate(),
       count: {
         allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
         denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
         alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
+        pendingAlerts,
       },
     });
   }
@@ -102,12 +127,24 @@ async function getLast12Months(
       _count: true,
     });
 
+    const pendingAlerts = await db.alert.count({
+      where: {
+        userId: userId,
+        status: "open",
+        createdAt: {
+          gte: startOfMonth.toJSDate(),
+          lt: startOfMonth.plus({ months: 1 }).toJSDate(),
+        },
+      },
+    });
+
     stats.push({
       timestamp: startOfMonth.toJSDate(),
       count: {
         allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
         denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
         alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
+        pendingAlerts,
       },
     });
   }
