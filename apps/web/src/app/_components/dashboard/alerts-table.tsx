@@ -35,6 +35,17 @@ import {
 } from "../ui/table";
 import { Badge } from "../ui/badge";
 import { api, type RouterOutputs } from "~/trpc/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Textarea } from "../ui/textarea";
 
 type Alert = RouterOutputs["alerts"]["getAlerts"][number];
 
@@ -93,12 +104,17 @@ const columns: ColumnDef<Alert>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
+      const resolution = row.original.resolution;
+      const displayStatus =
+        status === "resolved" && resolution === "rejected"
+          ? "False positive"
+          : status;
       return (
         <Badge
           variant={status === "open" ? "destructive" : "outline"}
           className="capitalize"
         >
-          {status}
+          {displayStatus}
         </Badge>
       );
     },
@@ -124,23 +140,88 @@ const columns: ColumnDef<Alert>[] = [
     id: "actions",
     cell: ({ row }) => {
       const alert = row.original;
+      const [isOpen, setIsOpen] = useState(false);
+      const [resolution, setResolution] = useState<"approved" | "rejected">(
+        "approved",
+      );
+      const [notes, setNotes] = useState("");
+      const utils = api.useUtils();
+
+      const { mutate: resolveAlert, isPending } =
+        api.alerts.resolveAlert.useMutation({
+          onSuccess: () => {
+            setIsOpen(false);
+            setNotes("");
+            setResolution("approved");
+            void utils.alerts.getAlerts.invalidate();
+          },
+        });
+
+      if (alert.status !== "open") return null;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Approve Alert</DropdownMenuItem>
-            <DropdownMenuItem>Reject Alert</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+            Resolve
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Resolve Alert</DialogTitle>
+                <DialogDescription>
+                  Choose how you want to resolve this alert.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="resolution">Resolution</Label>
+                  <RadioGroup
+                    id="resolution"
+                    value={resolution}
+                    onValueChange={(value) =>
+                      setResolution(value as "approved" | "rejected")
+                    }
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="approved" id="resolved" />
+                      <Label htmlFor="resolved">Resolved</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="rejected" id="false-positive" />
+                      <Label htmlFor="false-positive">False Positive</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Add any additional notes about this resolution..."
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    resolveAlert({
+                      id: alert.id,
+                      resolution,
+                      notes: notes || undefined,
+                    });
+                  }}
+                  disabled={isPending}
+                >
+                  {isPending ? "Resolving..." : "Confirm Resolution"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
       );
     },
   },
