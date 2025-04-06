@@ -51,7 +51,7 @@ model Rule {
   name        String
   description String?
   active      Boolean
-  ruleParts   Json
+  parts       Json
   action      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
