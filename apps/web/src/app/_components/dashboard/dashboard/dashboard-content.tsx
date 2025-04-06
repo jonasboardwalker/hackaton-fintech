@@ -2,10 +2,10 @@
 
 import { TransactionStatsSchema } from "~/server/api/routers/dashboard/getTransactionStats.schema";
 import { useMemo, useState } from "react";
-import { TransactionWorldMap } from "~/app/_components";
+import { TransactionsOverviewCard } from "./cards/transactions-overview-card";
+import { TransactionWorldMapCard } from "./cards/transaction-world-map-card";
 import { TransactionsSummaryCard } from "./cards/transactions-summary-card";
 import { AlertsSummaryCard } from "./cards/alerts-summary-card";
-import { TransactionsOverviewCard } from "./cards/transactions-overview-card";
 
 type Props = {
   stats: TransactionStatsSchema;
@@ -26,7 +26,7 @@ export function DashboardContent(props: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex justify-center space-x-4">
+      <div className="mb-4 flex space-x-4">
         {[
           { key: "daily", label: "Last Week" },
           { key: "weekly", label: "Last Month" },
@@ -55,7 +55,11 @@ export function DashboardContent(props: Props) {
           className="col-span-1"
           scope={scope}
         />
-        <TransactionWorldMap className="col-span-1" />
+        <TransactionWorldMapCard
+          data={data}
+          className="col-span-1"
+          scope={scope}
+        />
       </div>
     </div>
   );
