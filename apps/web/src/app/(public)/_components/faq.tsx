@@ -1,54 +1,53 @@
+import { PlusIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionPrimitiveHeader,
-  AccordionPrimitiveTrigger,
-} from "~/components/ui/accordion";
-import { PlusIcon } from "lucide-react";
-import { cn } from "~/lib/utils";
+  AccordionTrigger,
+} from "~/app/_components/ui/accordion";
+import { cn } from "~/app/_lib/utils";
 
 const faq = [
   {
-    question: "What is your return policy?",
+    question: "How does TrustLimit prevent internal fraud?",
     answer:
-      "You can return unused items in their original packaging within 30 days for a refund or exchange. Contact support for assistance.",
+      "TrustLimit provides real-time transaction controls based on roles, time, amount, and context. You can set limits on who can send money, when, and how much, preventing unauthorized transactions before they happen.",
   },
   {
-    question: "How do I track my order?",
+    question: "How easy is it to integrate TrustLimit?",
     answer:
-      "Track your order using the link provided in your confirmation email, or log into your account to view tracking details.",
+      "Integration is simple - just wrap your transaction code in trustLimit.check() and our API will instantly return allow, deny, or alert based on your configured policies. Most customers are up and running in hours, not days.",
   },
   {
-    question: "Do you ship internationally?",
+    question: "What types of companies use TrustLimit?",
     answer:
-      "Yes, we ship worldwide. Shipping fees and delivery times vary by location, and customs duties may apply for some countries.",
+      "TrustLimit is designed for fintech startups, B2B financial SaaS platforms, and compliance-focused companies. Our customers include neobanks, crypto wallets, expense platforms, payroll providers, and treasury management tools.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "How does pricing work?",
     answer:
-      "We accept Visa, MasterCard, American Express, PayPal, Apple Pay, and Google Pay, ensuring secure payment options for all customers.",
+      "We offer a SaaS API pricing model based on the volume of transaction checks. We have plans for startups, growing businesses, and enterprise customers with premium tiers that include webhook alerts, audit logs, and advanced analytics.",
   },
   {
-    question: "What if I receive a damaged item?",
+    question: "Does TrustLimit help with compliance requirements?",
     answer:
-      "Please contact our support team within 48 hours of delivery with photos of the damaged item. We’ll arrange a replacement or refund.",
+      "Yes! TrustLimit helps you meet requirements under SOX, ISO, PCI, and SOC 2 by providing robust financial controls and detailed audit trails. This adds defensibility for fintech startups in front of investors, regulators, and enterprise customers.",
   },
   {
-    question: "How can I contact customer support?",
+    question: "Can I customize the transaction policies?",
     answer:
-      "You can reach our support team via email at support@example.com or through the live chat on our website. We're available 24/7 to assist you.",
+      "Absolutely. Our admin dashboard allows you to define custom roles and rules based on your organization's specific needs. You can set policies based on user roles, time of day, transaction amounts, geographic locations, and more.",
   },
 ];
 
 const FAQ = () => {
   return (
     <div id="faq" className="xs:py-16 mx-auto w-full max-w-screen-xl px-6 py-8">
-      <h2 className="xs:text-4xl text-3xl !leading-[1.15] font-bold tracking-tighter md:text-center md:text-5xl">
+      <h2 className="xs:text-4xl text-3xl !leading-[1.15] font-bold tracking-tight md:text-center md:text-5xl">
         Frequently Asked Questions
       </h2>
       <p className="xs:text-lg text-muted-foreground mt-1.5 md:text-center">
-        Quick answers to common questions about our products and services.
+        Common questions about TrustLimit's transaction control platform.
       </p>
 
       <div className="min-h-[550px] md:min-h-[320px] xl:min-h-[300px]">
@@ -63,17 +62,15 @@ const FAQ = () => {
               value={`question-${index}`}
               className="bg-accent !mt-0 !mb-4 break-inside-avoid rounded-xl border-none px-4 py-1"
             >
-              <AccordionPrimitiveHeader className="flex">
-                <AccordionPrimitiveTrigger
-                  className={cn(
-                    "flex flex-1 items-center justify-between py-4 font-semibold tracking-tight transition-all hover:underline [&[data-state=open]>svg]:rotate-45",
-                    "text-start text-lg",
-                  )}
-                >
-                  {question}
-                  <PlusIcon className="text-muted-foreground h-5 w-5 shrink-0 transition-transform duration-200" />
-                </AccordionPrimitiveTrigger>
-              </AccordionPrimitiveHeader>
+              <AccordionTrigger
+                className={cn(
+                  "flex flex-1 items-center justify-between py-4 font-semibold tracking-tight transition-all hover:underline [&[data-state=open]>svg]:rotate-45",
+                  "text-start text-lg",
+                )}
+              >
+                {question}
+                <PlusIcon className="text-muted-foreground h-5 w-5 shrink-0 transition-transform duration-200" />
+              </AccordionTrigger>
               <AccordionContent className="text-[15px]">
                 {answer}
               </AccordionContent>

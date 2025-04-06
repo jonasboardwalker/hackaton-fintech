@@ -1,49 +1,49 @@
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import {
-  BookCheck,
-  ChartPie,
-  FolderSync,
-  Goal,
-  Users,
+  ShieldCheck,
+  Clock,
+  UserCheck,
+  FileText,
+  Code,
   Zap,
 } from "lucide-react";
+import { Card, CardContent, CardHeader } from "~/app/_components/ui/card";
 
 const features = [
   {
-    icon: Goal,
-    title: "Identify Opportunities",
+    icon: ShieldCheck,
+    title: "Prevent Internal Fraud",
     description:
-      "Easily uncover untapped areas to explore and expand your reach effortlessly.",
+      "Stop unauthorized transactions with role-based permissions and smart transaction controls.",
   },
   {
-    icon: BookCheck,
-    title: "Build Authority",
+    icon: Clock,
+    title: "Time-Based Controls",
     description:
-      "Create valuable content that resonates, inspires trust, and positions you as an expert.",
+      "Set time windows for transactions to prevent unusual activity outside of business hours.",
   },
   {
-    icon: ChartPie,
-    title: "Instant Insights",
+    icon: UserCheck,
+    title: "Role-Based Permissions",
     description:
-      "Gain immediate, actionable insights with a quick glance, enabling fast decision-making.",
+      "Define transaction limits and approval workflows based on user roles and departments.",
   },
   {
-    icon: Users,
-    title: "Engage with Your Audience",
+    icon: FileText,
+    title: "Compliance & Audit Trails",
     description:
-      "Boost audience engagement with interactive features like polls, quizzes, and forms.",
+      "Maintain detailed logs of all transaction attempts for regulatory compliance and auditing.",
   },
   {
-    icon: FolderSync,
-    title: "Automate Your Workflow",
+    icon: Code,
+    title: "Simple API Integration",
     description:
-      "Streamline your processes by automating repetitive tasks, saving time and reducing effort.",
+      "Implement with a single line of code - wrap your transactions in trustLimit.check() to instantly allow/deny/alert.",
   },
   {
     icon: Zap,
-    title: "Accelerate Growth",
+    title: "Real-Time Alerts",
     description:
-      "Supercharge your growth by implementing strategies that drive results quickly and efficiently.",
+      "Get instant notifications for suspicious transactions or policy violations via webhooks or dashboard.",
   },
 ];
 
@@ -54,8 +54,12 @@ const Features = () => {
       className="xs:py-20 mx-auto w-full max-w-screen-xl px-6 py-12"
     >
       <h2 className="xs:text-4xl text-3xl font-bold tracking-tight sm:mx-auto sm:max-w-xl sm:text-center md:text-5xl md:leading-[3.5rem]">
-        Boost Your Strategy with Smart Features
+        Feature Flags for Money
       </h2>
+      <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-center text-lg">
+        TrustLimit provides programmable transaction controls that help fintechs
+        prevent misuse and stay compliant.
+      </p>
       <div className="xs:mt-14 mx-auto mt-8 grid w-full gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature) => (
           <Card
@@ -63,7 +67,9 @@ const Features = () => {
             className="flex flex-col overflow-hidden rounded-xl border shadow-none"
           >
             <CardHeader>
-              <feature.icon />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
+                <feature.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-300" />
+              </div>
               <h4 className="!mt-3 text-xl font-bold tracking-tight">
                 {feature.title}
               </h4>
@@ -71,8 +77,8 @@ const Features = () => {
                 {feature.description}
               </p>
             </CardHeader>
-            <CardContent className="mt-auto px-0 pb-0">
-              <div className="bg-muted ml-6 h-52 rounded-tl-xl" />
+            <CardContent className="mt-auto px-6 pb-6">
+              <div className="bg-muted h-32 rounded-lg" />
             </CardContent>
           </Card>
         ))}

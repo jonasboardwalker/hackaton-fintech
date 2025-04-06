@@ -51,7 +51,7 @@ async function main() {
           ],
           action: "hold",
           active: true,
-          alert: false,
+          alert: true,
           reason: "High value transaction detected",
         } satisfies z.infer<typeof ruleSchema>),
         user: {
@@ -79,7 +79,7 @@ async function main() {
           ],
           action: "block",
           active: true,
-          alert: false,
+          alert: true,
           reason: "Suspicious transaction frequency detected",
         } satisfies z.infer<typeof ruleSchema>),
         user: {
@@ -112,7 +112,7 @@ async function main() {
           ],
           action: "hold",
           active: true,
-          alert: false,
+          alert: true,
           reason: "Complex transaction monitoring triggered",
         } satisfies z.infer<typeof ruleSchema>),
         user: {

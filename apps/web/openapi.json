@@ -56,8 +56,9 @@
                     "status": {
                       "type": "string",
                       "enum": [
-                        "allowed",
-                        "denied"
+                        "approved",
+                        "blocked",
+                        "hold"
                       ]
                     },
                     "transaction": {

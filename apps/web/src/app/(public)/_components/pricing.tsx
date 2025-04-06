@@ -1,53 +1,56 @@
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
-import { cn } from "~/lib/utils";
 import { CircleCheck } from "lucide-react";
+import { Badge } from "~/app/_components/ui/badge";
+import { Button } from "~/app/_components/ui/button";
+import { Separator } from "~/app/_components/ui/separator";
+import { cn } from "~/app/_lib/utils";
 
 const plans = [
   {
-    name: "Starter",
-    price: 19,
+    name: "Startup",
+    price: 199,
     description:
-      "Get 20 AI-generated portraits with 2 unique styles and filters.",
+      "Perfect for early-stage fintechs and small financial platforms.",
     features: [
-      "5 hours turnaround time",
-      "20 AI portraits",
-      "Choice of 2 styles",
-      "Choice of 2 filters",
-      "2 retouch credits",
+      "Up to 10,000 transaction checks/month",
+      "Basic role-based controls",
+      "Standard time-based rules",
+      "Email alerts for violations",
+      "7-day audit log retention",
+      "Standard support",
     ],
-    buttonText: "Get 20 portraits in 5 hours",
+    buttonText: "Start your free trial",
   },
   {
-    name: "Advanced",
-    price: 29,
+    name: "Growth",
+    price: 499,
     isRecommended: true,
     description:
-      "Get 50 AI-generated portraits with 5 unique styles and filters.",
+      "For growing fintechs with increasing transaction volumes and compliance needs.",
     features: [
-      "3 hours turnaround time",
-      "50 AI portraits",
-      "Choice of 5 styles",
-      "Choice of 5 filters",
-      "5 retouch credits",
+      "Up to 100,000 transaction checks/month",
+      "Advanced role-based controls",
+      "Custom time and amount rules",
+      "Webhook alerts and notifications",
+      "30-day audit log retention",
+      "Priority support",
     ],
-    buttonText: "Get 50 portraits in 3 hours",
+    buttonText: "Start your free trial",
     isPopular: true,
   },
   {
-    name: "Premium",
-    price: 49,
+    name: "Enterprise",
+    price: 999,
     description:
-      "Get 100 AI-generated portraits with 10 unique styles and filters.",
+      "For established fintechs with complex compliance requirements.",
     features: [
-      "1-hour turnaround time",
-      "100 AI portraits",
-      "Choice of 10 styles",
-      "Choice of 10 filters",
-      "10 retouch credits",
+      "Unlimited transaction checks",
+      "Custom approval workflows",
+      "Advanced policy engine",
+      "Real-time dashboard and analytics",
+      "1-year audit log retention",
+      "Dedicated support manager",
     ],
-    buttonText: "Get 100 portraits in 1 hour",
+    buttonText: "Contact sales",
   },
 ];
 
@@ -57,6 +60,9 @@ const Pricing = () => {
       <h1 className="xs:text-5xl text-center text-4xl font-bold tracking-tight">
         Pricing
       </h1>
+      <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-center text-lg">
+        Simple, transparent pricing that scales with your business.
+      </p>
       <div className="xs:mt-14 mt-8 grid grid-cols-1 items-center gap-8 lg:grid-cols-3 lg:gap-0">
         {plans.map((plan) => (
           <div
@@ -70,12 +76,17 @@ const Pricing = () => {
             )}
           >
             {plan.isPopular && (
-              <Badge className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2">
+              <Badge className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100">
                 Most Popular
               </Badge>
             )}
             <h3 className="text-lg font-medium">{plan.name}</h3>
-            <p className="mt-2 text-4xl font-bold">${plan.price}</p>
+            <p className="mt-2 text-4xl font-bold">
+              ${plan.price}
+              <span className="text-muted-foreground text-lg font-normal">
+                /mo
+              </span>
+            </p>
             <p className="text-muted-foreground mt-4 font-medium">
               {plan.description}
             </p>
@@ -83,7 +94,7 @@ const Pricing = () => {
             <ul className="space-y-2">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2">
-                  <CircleCheck className="mt-1 h-4 w-4 text-green-600" />
+                  <CircleCheck className="mt-1 h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                   {feature}
                 </li>
               ))}

@@ -5,13 +5,15 @@ import { RulesTable } from "../../_components/dashboard/rules-table";
 import { Button } from "~/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { api } from "~/trpc/server";
 
 export const metadata: Metadata = {
   title: "Rules | TrustLimit",
   description: "Manage transaction control rules",
 };
 
-export default function RulesPage() {
+export default async function RulesPage() {
+  const rules = await api.rules.getRules();
   return (
     <DashboardShell>
       <DashboardHeader
@@ -25,7 +27,7 @@ export default function RulesPage() {
           </Link>
         </Button>
       </DashboardHeader>
-      <RulesTable />
+      <RulesTable rules={rules} />
     </DashboardShell>
   );
 }

@@ -22,7 +22,7 @@ export class DefaultService {
             clientEmail: string;
         },
     ): CancelablePromise<{
-        status: 'allowed' | 'denied';
+        status: 'approved' | 'blocked' | 'hold';
         transaction: {
             id: string;
             userId: string;
