@@ -15,42 +15,65 @@ type Stats = {
 
 async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
+  const dates = Array.from({ length: 7 }, (_, i) => now.minus({ days: i }));
 
-  // Get daily stats for past 7 days, newest first
-  for (let i = 6; i >= 0; i--) {
-    const date = now.minus({ days: i });
-    const startOfDay = date.startOf("day");
-
-    const transactions = await db.transaction.groupBy({
-      by: ["status"],
+  // Get all transactions and alerts for the period in parallel
+  const [transactions, alerts] = await Promise.all([
+    db.transaction.findMany({
       where: {
         userId: userId,
         createdAt: {
-          gte: startOfDay.toJSDate(),
-          lt: startOfDay.plus({ days: 1 }).toJSDate(),
+          gte: dates[6]?.startOf("day").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("day").toJSDate() ?? new Date(),
         },
       },
-      _count: true,
-    });
-
-    const pendingAlerts = await db.alert.count({
+      select: {
+        status: true,
+        createdAt: true,
+      },
+    }),
+    db.alert.findMany({
       where: {
         userId: userId,
         status: "open",
         createdAt: {
-          gte: startOfDay.toJSDate(),
-          lt: startOfDay.plus({ days: 1 }).toJSDate(),
+          gte: dates[6]?.startOf("day").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("day").toJSDate() ?? new Date(),
         },
       },
-    });
+      select: {
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  // Process each day
+  for (let i = 6; i >= 0; i--) {
+    const date = dates[i];
+    if (!date) continue;
+
+    const startOfDay = date.startOf("day");
+    const endOfDay = date.endOf("day");
+
+    const dayTransactions = transactions.filter(
+      (t) =>
+        t.createdAt >= startOfDay.toJSDate() &&
+        t.createdAt < endOfDay.toJSDate(),
+    );
+
+    const dayAlerts = alerts.filter(
+      (a) =>
+        a.createdAt >= startOfDay.toJSDate() &&
+        a.createdAt < endOfDay.toJSDate(),
+    );
 
     stats.push({
       timestamp: startOfDay.toJSDate(),
       count: {
-        allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
-        denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
-        alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
-        pendingAlerts,
+        allowed: dayTransactions.filter((t) => t.status === "allowed").length,
+        denied: dayTransactions.filter((t) => t.status === "denied").length,
+        alerted: dayTransactions.filter((t) => t.status === "alerted").length,
+        pendingAlerts: dayAlerts.length,
       },
     });
   }
@@ -60,42 +83,65 @@ async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
 
 async function getLast4Weeks(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
+  const dates = Array.from({ length: 4 }, (_, i) => now.minus({ weeks: i }));
 
-  // Get weekly stats for past 4 weeks, newest first
-  for (let i = 3; i >= 0; i--) {
-    const date = now.minus({ weeks: i });
-    const startOfWeek = date.startOf("week");
-
-    const transactions = await db.transaction.groupBy({
-      by: ["status"],
+  // Get all transactions and alerts for the period in parallel
+  const [transactions, alerts] = await Promise.all([
+    db.transaction.findMany({
       where: {
         userId: userId,
         createdAt: {
-          gte: startOfWeek.toJSDate(),
-          lt: startOfWeek.plus({ weeks: 1 }).toJSDate(),
+          gte: dates[3]?.startOf("week").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("week").toJSDate() ?? new Date(),
         },
       },
-      _count: true,
-    });
-
-    const pendingAlerts = await db.alert.count({
+      select: {
+        status: true,
+        createdAt: true,
+      },
+    }),
+    db.alert.findMany({
       where: {
         userId: userId,
         status: "open",
         createdAt: {
-          gte: startOfWeek.toJSDate(),
-          lt: startOfWeek.plus({ weeks: 1 }).toJSDate(),
+          gte: dates[3]?.startOf("week").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("week").toJSDate() ?? new Date(),
         },
       },
-    });
+      select: {
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  // Process each week
+  for (let i = 3; i >= 0; i--) {
+    const date = dates[i];
+    if (!date) continue;
+
+    const startOfWeek = date.startOf("week");
+    const endOfWeek = date.endOf("week");
+
+    const weekTransactions = transactions.filter(
+      (t) =>
+        t.createdAt >= startOfWeek.toJSDate() &&
+        t.createdAt < endOfWeek.toJSDate(),
+    );
+
+    const weekAlerts = alerts.filter(
+      (a) =>
+        a.createdAt >= startOfWeek.toJSDate() &&
+        a.createdAt < endOfWeek.toJSDate(),
+    );
 
     stats.push({
       timestamp: startOfWeek.toJSDate(),
       count: {
-        allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
-        denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
-        alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
-        pendingAlerts,
+        allowed: weekTransactions.filter((t) => t.status === "allowed").length,
+        denied: weekTransactions.filter((t) => t.status === "denied").length,
+        alerted: weekTransactions.filter((t) => t.status === "alerted").length,
+        pendingAlerts: weekAlerts.length,
       },
     });
   }
@@ -109,42 +155,65 @@ async function getLast12Months(
   now: DateTime,
 ) {
   const stats: Stats[] = [];
+  const dates = Array.from({ length: 12 }, (_, i) => now.minus({ months: i }));
 
-  // Get monthly stats for past 12 months, newest first
-  for (let i = 11; i >= 0; i--) {
-    const date = now.minus({ months: i });
-    const startOfMonth = date.startOf("month");
-
-    const transactions = await db.transaction.groupBy({
-      by: ["status"],
+  // Get all transactions and alerts for the period in parallel
+  const [transactions, alerts] = await Promise.all([
+    db.transaction.findMany({
       where: {
         userId: userId,
         createdAt: {
-          gte: startOfMonth.toJSDate(),
-          lt: startOfMonth.plus({ months: 1 }).toJSDate(),
+          gte: dates[11]?.startOf("month").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("month").toJSDate() ?? new Date(),
         },
       },
-      _count: true,
-    });
-
-    const pendingAlerts = await db.alert.count({
+      select: {
+        status: true,
+        createdAt: true,
+      },
+    }),
+    db.alert.findMany({
       where: {
         userId: userId,
         status: "open",
         createdAt: {
-          gte: startOfMonth.toJSDate(),
-          lt: startOfMonth.plus({ months: 1 }).toJSDate(),
+          gte: dates[11]?.startOf("month").toJSDate() ?? new Date(),
+          lt: dates[0]?.endOf("month").toJSDate() ?? new Date(),
         },
       },
-    });
+      select: {
+        createdAt: true,
+      },
+    }),
+  ]);
+
+  // Process each month
+  for (let i = 11; i >= 0; i--) {
+    const date = dates[i];
+    if (!date) continue;
+
+    const startOfMonth = date.startOf("month");
+    const endOfMonth = date.endOf("month");
+
+    const monthTransactions = transactions.filter(
+      (t) =>
+        t.createdAt >= startOfMonth.toJSDate() &&
+        t.createdAt < endOfMonth.toJSDate(),
+    );
+
+    const monthAlerts = alerts.filter(
+      (a) =>
+        a.createdAt >= startOfMonth.toJSDate() &&
+        a.createdAt < endOfMonth.toJSDate(),
+    );
 
     stats.push({
       timestamp: startOfMonth.toJSDate(),
       count: {
-        allowed: transactions.find((t) => t.status === "allowed")?._count ?? 0,
-        denied: transactions.find((t) => t.status === "denied")?._count ?? 0,
-        alerted: transactions.find((t) => t.status === "alerted")?._count ?? 0,
-        pendingAlerts,
+        allowed: monthTransactions.filter((t) => t.status === "allowed").length,
+        denied: monthTransactions.filter((t) => t.status === "denied").length,
+        alerted: monthTransactions.filter((t) => t.status === "alerted").length,
+        pendingAlerts: monthAlerts.length,
       },
     });
   }

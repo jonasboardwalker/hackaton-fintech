@@ -141,3 +141,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide Mapbox attribution */
+.mapboxgl-ctrl.mapboxgl-ctrl-attrib.mapboxgl-compact {
+  display: none !important;
+}
