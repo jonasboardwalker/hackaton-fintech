@@ -52,10 +52,16 @@ export default function PaymentScreen() {
         metadata: { location: devOverrides.location },
       });
 
-      if (result.status === "allowed") {
+      if (result.status === "approved") {
         toast({
           title: "Transaction Approved!",
           description: "Your payment has been processed successfully.",
+        });
+        setTimeout(() => router.push("/"), 1500);
+      } else if (result.status === "hold") {
+        toast({
+          title: "Transaction was put on hold",
+          description: "It will be checked by our support member.",
         });
         setTimeout(() => router.push("/"), 1500);
       } else {

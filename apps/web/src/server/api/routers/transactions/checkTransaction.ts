@@ -6,8 +6,7 @@ import {
   checkTransactionOutputSchema,
   metadataSchema,
 } from "~/server/api/routers/transactions/checkTransaction.schema";
-import { runTransactionCheck } from "~/server/api/routers/transactions/checkTransactions.utils";
-import { type Prisma } from "@prisma/client";
+import { runTransactionCheck } from "~/server/api/routers/transactions/checkTransaction.utils";
 
 const findWorstAction = (
   brokenRules: ReturnType<typeof runTransactionCheck>,
@@ -94,18 +93,6 @@ export const checkTransaction = apiKeyProcedure
     const status = findWorstAction(brokenRules);
     const alert = findWorstAlert(brokenRules);
 
-
-    if (alert) {
-      await ctx.db.alert.create({
-        data: {
-          status: "open",
-        },
-      });
-    }
-
-    // For now, we'll just log the broken rules
-    console.log("Broken rules:", brokenRules);
-
     // Default to allowed status
     const transaction = await ctx.db.transaction.create({
       data: {
@@ -116,6 +103,20 @@ export const checkTransaction = apiKeyProcedure
         metadata,
       },
     });
+
+    if (alert) {
+      await ctx.db.alert.create({
+        data: {
+          status: "open",
+          userId: ctx.user.id,
+          clientId: client.id,
+          transactionId: transaction.id,
+          rules: {
+            connect: brokenRules.map(({ ruleId }) => ({ id: ruleId })),
+          },
+        },
+      });
+    }
 
     return {
       status,
