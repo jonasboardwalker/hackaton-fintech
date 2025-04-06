@@ -6,7 +6,7 @@ export * from "./dashboard-shell"
 export * from "./mobile-nav"
 export * from "./transactionsOverviewCard"
 export * from "./recent-transactions"
-export * from "./rule-form"
+export * from "./rule-form/rule-form";
 export * from "./rules-table"
 export * from "./settings-form"
 export * from "./transaction-heatmap"
