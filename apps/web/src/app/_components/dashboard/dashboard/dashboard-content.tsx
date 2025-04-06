@@ -26,7 +26,7 @@ export function DashboardContent(props: Props) {
 
   return (
     <div>
-      <div className="mb-4 flex justify-center space-x-4">
+      <div className="mb-4 flex space-x-4">
         {[
           { key: "daily", label: "Last Week" },
           { key: "weekly", label: "Last Month" },
