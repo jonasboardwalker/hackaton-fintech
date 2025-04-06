@@ -13,7 +13,7 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -31,11 +31,34 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
 import { cn } from "~/app/_lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-type Rules = Awaited<ReturnType<typeof api.rules.getRules>>;
-type Rule = Rules[number];
+type Rule = {
+  id: string;
+  name: string;
+  description: string | null;
+  parameters: Record<string, unknown>;
+  action: string;
+  alert: boolean;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+};
 
 // Define the columns for the table
 const columns: ColumnDef<Rule>[] = [
@@ -75,7 +98,7 @@ const columns: ColumnDef<Rule>[] = [
     },
     cell: ({ row }) => (
       <div className="pl-3 text-left">
-        {row.original.alert ? "CREATES ALERT" : "NO ALERT"}
+        {row.original.alert ? "Yes" : "No"}
       </div>
     ),
   },
@@ -138,6 +161,52 @@ const columns: ColumnDef<Rule>[] = [
         })}
       </div>
     ),
+  },
+  {
+    id: "actions",
+    header: "",
+    cell: ({ row }) => {
+      const router = useRouter();
+      const deleteRule = api.rules.deleteRule.useMutation({
+        onSuccess: () => {
+          toast.success("Rule deleted successfully");
+          router.refresh();
+        },
+        onError: (error) => {
+          toast.error("Failed to delete rule: " + error.message);
+        },
+      });
+
+      return (
+        <div className="flex justify-end">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the rule
+                  "{row.original.name}".
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deleteRule.mutate({ id: row.original.id })}
+                  className="bg-destructive text-white hover:bg-destructive/90"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      );
+    },
   },
 ];
 

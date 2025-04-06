@@ -6,12 +6,13 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { MainNav } from "~/app/_components";
 
 export const PublicNavbar = async () => {
   return (
     <nav className="flex items-center justify-between gap-x-2 bg-white p-4 shadow-xs">
       <Link href="/" className="flex items-center space-x-2">
-        <Logo />
+        <MainNav />
       </Link>
 
       <div className="flex gap-x-2">
