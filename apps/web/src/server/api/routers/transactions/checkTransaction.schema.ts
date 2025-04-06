@@ -12,7 +12,7 @@ export const checkTransactionInputSchema = z.object({
 });
 
 export const checkTransactionOutputSchema = z.object({
-  status: z.enum(["allowed", "denied"]),
+  status: z.enum(["approved", "blocked", "hold"]),
   transaction: z.object({
     id: z.string(),
     userId: z.string(),

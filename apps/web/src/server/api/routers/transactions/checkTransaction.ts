@@ -6,6 +6,23 @@ import {
   checkTransactionOutputSchema,
   metadataSchema,
 } from "~/server/api/routers/transactions/checkTransaction.schema";
+import { runTransactionCheck } from "~/server/api/routers/transactions/checkTransactions.utils";
+import { type Prisma } from "@prisma/client";
+
+const findWorstAction = (
+  brokenRules: ReturnType<typeof runTransactionCheck>,
+) => {
+  if (brokenRules.some(({ action }) => action === "block")) return "blocked";
+  if (brokenRules.some(({ action }) => action === "hold")) return "hold";
+  return "approved";
+};
+
+const findWorstAlert = (
+  brokenRules: ReturnType<typeof runTransactionCheck>,
+) => {
+  if (brokenRules.some(({ alert }) => alert)) return true;
+  return false;
+};
 
 export const checkTransaction = apiKeyProcedure
   .input(checkTransactionInputSchema)
@@ -20,7 +37,6 @@ export const checkTransaction = apiKeyProcedure
     }
 
     const { amount, metadata = {}, clientId, clientEmail } = input;
-    const status = amount > 1000 ? "denied" : "allowed";
 
     let client = await ctx.db.client.findFirst({
       where: {
@@ -46,6 +62,51 @@ export const checkTransaction = apiKeyProcedure
         },
       });
 
+    // Load previous transactions
+    const previousTransactions = await ctx.db.transaction.findMany({
+      where: {
+        userId: ctx.user.id,
+        clientId: client.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Load active rules
+    const rules = await ctx.db.rule.findMany({
+      where: {
+        userId: ctx.user.id,
+        active: true,
+      },
+    });
+
+    // Run transaction check
+    const brokenRules = runTransactionCheck({
+      transaction: {
+        amount,
+        metadata,
+      },
+      previousTransactions,
+      rules,
+    });
+
+    const status = findWorstAction(brokenRules);
+    const alert = findWorstAlert(brokenRules);
+
+
+    if (alert) {
+      await ctx.db.alert.create({
+        data: {
+          status: "open",
+        },
+      });
+    }
+
+    // For now, we'll just log the broken rules
+    console.log("Broken rules:", brokenRules);
+
+    // Default to allowed status
     const transaction = await ctx.db.transaction.create({
       data: {
         userId: ctx.user.id,
@@ -62,9 +123,6 @@ export const checkTransaction = apiKeyProcedure
         ...transaction,
         metadata: transaction.metadata as z.infer<typeof metadataSchema>,
       },
-      message:
-        status === "denied"
-          ? `Transaction denied, amount exceeds $1000.`
-          : `Transaction allowed.`,
+      message: "Transaction allowed.",
     };
   });
