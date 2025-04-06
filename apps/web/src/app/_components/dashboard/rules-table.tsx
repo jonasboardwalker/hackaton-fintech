@@ -168,10 +168,10 @@ export function RulesTable(props: Props) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter transactions..."
-          value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter rules..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("id")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

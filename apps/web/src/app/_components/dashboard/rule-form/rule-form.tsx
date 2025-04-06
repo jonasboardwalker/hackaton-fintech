@@ -44,11 +44,13 @@ import { ruleSchema, rulePartSchema } from "~/utils/rules/rules.schema";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 type RuleFormValues = z.infer<typeof ruleSchema>;
 type RulePart = z.infer<typeof rulePartSchema>;
 
 export function RuleForm() {
+  const router = useRouter();
   const form = useForm<RuleFormValues>({
     resolver: zodResolver(ruleSchema),
     defaultValues: {
@@ -79,6 +81,7 @@ export function RuleForm() {
         description: `Rule "${values.name}" has been created and is ${values.active ? "active" : "inactive"}.`,
       });
       form.reset();
+      router.push("/dashboard/rules");
     } catch {
       toast.error("Rule wasn't created");
     }

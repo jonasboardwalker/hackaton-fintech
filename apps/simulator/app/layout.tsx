@@ -15,14 +15,6 @@ export const metadata: Metadata = {
   title: "TrustLimit",
   description: "Smart Transaction Throttling for Fintech companies",
   manifest: "/manifest.json",
-  themeColor: "#000000",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -39,6 +31,17 @@ export const metadata: Metadata = {
     telephone: false,
   },
 };
+
+// Export viewport and themeColor separately as required by Next.js
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
+export const themeColor = "#000000";
 
 export default function RootLayout({
   children,
