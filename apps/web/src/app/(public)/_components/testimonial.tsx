@@ -1,81 +1,80 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { Star } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "~/components/ui/carousel";
-import { StarIcon } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { cn } from "~/lib/utils";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+} from "~/app/_components/ui/carousel";
+import { cn } from "~/app/_lib/utils";
 
 const testimonials = [
   {
     id: 1,
-    name: "John Doe",
-    designation: "Software Engineer",
-    company: "TechCorp",
+    name: "Sarah Johnson",
+    designation: "CFO",
+    company: "NeoBank Inc.",
     testimonial:
-      "This product has completely transformed the way we work. The efficiency and ease of use are unmatched! " +
-      "We were struggling with productivity before, but this tool has streamlined our entire process. ",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+      "TrustLimit has completely transformed how we manage internal financial controls. The ability to set granular permissions based on roles and time has prevented several potentially costly mistakes. " +
+      "Our compliance team loves the detailed audit trails, and implementation was surprisingly quick.",
+    avatar: "https://randomuser.me/api/portraits/women/1.jpg",
   },
   {
     id: 2,
-    name: "Jane Smith",
-    designation: "Product Manager",
-    company: "InnovateX",
+    name: "Michael Chen",
+    designation: "Head of Engineering",
+    company: "PayFast Solutions",
     testimonial:
-      "An amazing tool that simplifies complex tasks. Highly recommended for professionals in the industry. " +
-      "The intuitive interface makes it easy to onboard new team members, and the automation features save us countless hours every week. ",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+      "As the technical lead, I was impressed by how easy it was to integrate TrustLimit. The API is well-documented, and wrapping our transaction code in trustLimit.check() was seamless. " +
+      "The real-time alerts have already helped us catch several unusual transaction patterns that would have gone unnoticed.",
+    avatar: "https://randomuser.me/api/portraits/men/2.jpg",
   },
   {
     id: 3,
-    name: "Michael Johnson",
-    designation: "UX Designer",
-    company: "DesignPro",
+    name: "Emma Rodriguez",
+    designation: "Compliance Officer",
+    company: "CryptoWallet Pro",
     testimonial:
-      "The user experience is top-notch! The interface is clean, intuitive, and easy to navigate. " +
-      "As a designer, I appreciate the attention to detail and well-thought-out UI components. " +
-      "It makes designing and prototyping so much more efficient.",
-    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+      "In the crypto space, preventing internal misuse is critical. TrustLimit gives us the controls we need to satisfy regulators while maintaining operational efficiency. " +
+      "The customizable rules engine lets us adapt quickly to new compliance requirements, and the dashboard provides the visibility we need.",
+    avatar: "https://randomuser.me/api/portraits/women/3.jpg",
   },
   {
     id: 4,
-    name: "Emily Davis",
-    designation: "Marketing Specialist",
-    company: "BrandBoost",
+    name: "David Kim",
+    designation: "Product Manager",
+    company: "ExpenseTrack",
     testimonial:
-      "I've seen a significant improvement in our team's productivity since we started using this service. " +
-      "The ability to track performance, analyze data, and collaborate across teams has been a game-changer.",
-    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
+      "Our expense management platform needed robust controls to give our enterprise clients confidence. TrustLimit provided exactly what we needed - a financial firewall that prevents misuse while being easy to configure. " +
+      "It's become a key selling point in our enterprise sales conversations.",
+    avatar: "https://randomuser.me/api/portraits/men/4.jpg",
   },
   {
     id: 5,
-    name: "Daniel Martinez",
-    designation: "Full-Stack Developer",
-    company: "CodeCrafters",
+    name: "Jessica Taylor",
+    designation: "CTO",
+    company: "B2B Payments Ltd",
     testimonial:
-      "The best investment we've made! The support team is also super responsive and helpful. " +
-      "As a developer, I appreciate the well-documented API, the flexibility of integrations, and the robust security features.",
-    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+      "TrustLimit is now an essential part of our infrastructure. The ability to enforce financial policies across different teams and geographies has eliminated the manual approval workflows we used to rely on. " +
+      "Our development team particularly appreciates the webhook integration for real-time alerts.",
+    avatar: "https://randomuser.me/api/portraits/women/5.jpg",
   },
   {
     id: 6,
-    name: "Sophia Lee",
-    designation: "Data Analyst",
-    company: "InsightTech",
+    name: "Robert Singh",
+    designation: "CEO",
+    company: "FinControl Systems",
     testimonial:
-      "This tool has saved me hours of work! The analytics and reporting features are incredibly powerful. " +
-      "I can now generate detailed reports in minutes, which previously took days to compile. " +
-      "helping us make smarter, data-backed decisions.",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+      "As a financial controls platform ourselves, we know good fintech infrastructure when we see it. TrustLimit has saved us months of development time by providing a ready-made solution for transaction controls. " +
+      "It's helped us focus on our core product while still offering robust financial guardrails to our clients.",
+    avatar: "https://randomuser.me/api/portraits/men/6.jpg",
   },
 ];
+
 const Testimonial = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -100,7 +99,7 @@ const Testimonial = () => {
       className="xs:py-12 mx-auto w-full max-w-screen-xl px-6 py-6"
     >
       <h2 className="xs:mb-14 mb-8 text-center text-4xl font-bold tracking-tight md:text-5xl">
-        Testimonials
+        Trusted by Fintech Leaders
       </h2>
       <div className="container mx-auto w-full">
         <Carousel setApi={setApi}>
@@ -137,7 +136,7 @@ const TestimonialCard = ({
     <div className="flex items-center justify-between gap-20">
       <div className="bg-muted-foreground/20 relative hidden aspect-[3/4] w-full max-w-[18rem] shrink-0 rounded-xl lg:block">
         <Image
-          src="/placeholder.svg"
+          src="/placeholder.svg?height=400&width=300"
           fill
           alt=""
           className="rounded-xl object-cover"
@@ -173,11 +172,12 @@ const TestimonialCard = ({
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <StarIcon className="fill-muted-foreground stroke-muted-foreground h-5 w-5" />
-            <StarIcon className="fill-muted-foreground stroke-muted-foreground h-5 w-5" />
-            <StarIcon className="fill-muted-foreground stroke-muted-foreground h-5 w-5" />
-            <StarIcon className="fill-muted-foreground stroke-muted-foreground h-5 w-5" />
-            <StarIcon className="fill-muted-foreground stroke-muted-foreground h-5 w-5" />
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="fill-muted-foreground stroke-muted-foreground h-5 w-5"
+              />
+            ))}
           </div>
         </div>
         <p className="mt-6 text-lg leading-normal font-semibold tracking-tight sm:text-2xl lg:text-[1.75rem] lg:!leading-normal xl:text-3xl">
