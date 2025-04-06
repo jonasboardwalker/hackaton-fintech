@@ -3,7 +3,7 @@
 import { TransactionStatsSchema } from "~/server/api/routers/dashboard/getTransactionStats.schema";
 import { useMemo, useState } from "react";
 import {
-  TransactionOverviewChart,
+  TransactionsOverviewCard,
   TransactionWorldMap,
 } from "~/app/_components";
 import { TransactionsSummaryCard } from "./cards/transactions-summary-card";
@@ -48,7 +48,7 @@ export function DashboardContent(props: Props) {
         <AlertsSummaryCard count={totalAlerts} />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <TransactionOverviewChart className="col-span-1" />
+        <TransactionsOverviewCard data={data} className="col-span-1" />
         <TransactionWorldMap className="col-span-1" />
       </div>
     </div>
