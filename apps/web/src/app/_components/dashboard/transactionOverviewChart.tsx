@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
@@ -46,7 +45,7 @@ type Props = {
   className?: string;
 };
 
-export function Overview({ className }: Props) {
+export function TransactionOverviewChart({ className }: Props) {
   return (
     <Card className={className}>
       <CardHeader>
