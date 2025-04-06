@@ -1,13 +1,12 @@
 import { z } from "zod";
 import { privateProcedure } from "../../trpc";
+import { ruleSchema } from "~/utils/rules/rules.schema";
 
-export const updateRuleInputSchema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  description: z.string().optional(),
-  parameters: z.record(z.any()).optional(),
-  action: z.enum(["deny", "alert", "allow"]).optional(),
-});
+export const updateRuleInputSchema = z
+  .object({
+    id: z.string(),
+  })
+  .and(ruleSchema);
 
 export const updateRule = privateProcedure
   .input(updateRuleInputSchema)
@@ -38,4 +37,4 @@ export const updateRule = privateProcedure
     });
 
     return updatedRule;
-  }); 
+  });
