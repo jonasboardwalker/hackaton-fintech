@@ -34,111 +34,11 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
+import { api } from "~/trpc/server";
 
 // Define the transaction data type
-type Transaction = {
-  id: string;
-  user: string;
-  amount: string;
-  status: "approved" | "blocked" | "pending";
-  date: string;
-  rule: string;
-  method: string;
-};
-
-// Mock data for transactions
-const transactions: Transaction[] = [
-  {
-    id: "TX123456",
-    user: "Sarah Johnson",
-    amount: "$1,250.00",
-    status: "approved",
-    date: "2023-04-23T18:25:43.511Z",
-    rule: "Business Hours",
-    method: "Bank Transfer",
-  },
-  {
-    id: "TX123457",
-    user: "Michael Chen",
-    amount: "$5,000.00",
-    status: "blocked",
-    date: "2023-04-23T20:43:23.511Z",
-    rule: "After Hours Limit",
-    method: "Wire Transfer",
-  },
-  {
-    id: "TX123458",
-    user: "Alex Rodriguez",
-    amount: "$750.00",
-    status: "approved",
-    date: "2023-04-23T15:25:43.511Z",
-    rule: "Junior Staff Limit",
-    method: "ACH",
-  },
-  {
-    id: "TX123459",
-    user: "Emily Wong",
-    amount: "$3,500.00",
-    status: "pending",
-    date: "2023-04-23T16:25:43.511Z",
-    rule: "Manager Approval",
-    method: "Wire Transfer",
-  },
-  {
-    id: "TX123460",
-    user: "David Kim",
-    amount: "$2,100.00",
-    status: "approved",
-    date: "2023-04-23T14:25:43.511Z",
-    rule: "Business Hours",
-    method: "ACH",
-  },
-  {
-    id: "TX123461",
-    user: "Jessica Lee",
-    amount: "$900.00",
-    status: "approved",
-    date: "2023-04-23T13:15:43.511Z",
-    rule: "Junior Staff Limit",
-    method: "Bank Transfer",
-  },
-  {
-    id: "TX123462",
-    user: "Robert Smith",
-    amount: "$12,500.00",
-    status: "blocked",
-    date: "2023-04-23T19:35:43.511Z",
-    rule: "High Value Transfer",
-    method: "Wire Transfer",
-  },
-  {
-    id: "TX123463",
-    user: "Lisa Wang",
-    amount: "$4,200.00",
-    status: "pending",
-    date: "2023-04-23T17:25:43.511Z",
-    rule: "Manager Approval",
-    method: "ACH",
-  },
-  {
-    id: "TX123464",
-    user: "James Wilson",
-    amount: "$1,800.00",
-    status: "approved",
-    date: "2023-04-23T12:25:43.511Z",
-    rule: "Business Hours",
-    method: "Bank Transfer",
-  },
-  {
-    id: "TX123465",
-    user: "Maria Garcia",
-    amount: "$3,300.00",
-    status: "approved",
-    date: "2023-04-23T11:45:43.511Z",
-    rule: "Business Hours",
-    method: "Wire Transfer",
-  },
-];
+type Transactions = Awaited<ReturnType<typeof api.transaction.getTransactions>>;
+type Transaction = Transactions[number];
 
 // Define the columns for the table
 const columns: ColumnDef<Transaction>[] = [
@@ -148,7 +48,7 @@ const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "user",
+    accessorKey: "clientId",
     header: ({ column }) => {
       return (
         <Button
@@ -174,14 +74,11 @@ const columns: ColumnDef<Transaction>[] = [
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "method",
-    header: "Method",
-  },
-  {
-    accessorKey: "rule",
-    header: "Applied Rule",
+    cell: ({ row }) => (
+      <div className="text-center">
+        {"$" + Number(row.getValue("amount")).toFixed(2)}
+      </div>
+    ),
   },
   {
     accessorKey: "status",
@@ -205,7 +102,7 @@ const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return (
         <Button
@@ -218,7 +115,7 @@ const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <div>{new Date(row.getValue("date")).toLocaleString()}</div>
+      <div>{new Date(row.getValue("createdAt")).toLocaleString()}</div>
     ),
   },
   {
@@ -251,12 +148,16 @@ const columns: ColumnDef<Transaction>[] = [
   },
 ];
 
-export function TransactionsTable() {
+type Props = {
+  transactions: Transaction[];
+};
+
+export function TransactionsTable(props: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
-    data: transactions,
+    data: props.transactions,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

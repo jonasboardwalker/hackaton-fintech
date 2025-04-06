@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TransactionsPage() {
-  const trans = await api.transaction.getTransactions();
+  const transactions = await api.transaction.getTransactions();
 
   return (
     <DashboardShell>
@@ -20,7 +20,7 @@ export default async function TransactionsPage() {
         heading="Transactions"
         text="View and manage all transactions."
       />
-      <TransactionsTable />
+      <TransactionsTable transactions={transactions} />
     </DashboardShell>
   );
 }

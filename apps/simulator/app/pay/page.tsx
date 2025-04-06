@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useDevTools } from "@/context/dev-tools-context";
 import { trustClient } from "@/lib/trust-limit-client";
@@ -47,7 +47,7 @@ export default function PaymentScreen() {
     try {
       const result = await trustClient.checkTx({
         amount: Number.parseFloat(data.amount),
-        clientId: "1",
+        clientId: "a655a3c6-338c-4d6c-9149-b2f0ffd98c51",
         metadata: { location: devOverrides.location },
       });
 
