@@ -29,17 +29,21 @@ export function DashboardContent(props: Props) {
   return (
     <div>
       <div className="mb-4 flex justify-center space-x-4">
-        {["daily", "weekly", "monthly"].map((item) => (
+        {[
+          { key: "daily", label: "Last Week" },
+          { key: "weekly", label: "Last Month" },
+          { key: "monthly", label: "Last Year" },
+        ].map((item) => (
           <button
-            key={item}
-            onClick={() => setScope(item as "daily" | "weekly" | "monthly")}
+            key={item.key}
+            onClick={() => setScope(item.key as "daily" | "weekly" | "monthly")}
             className={`rounded px-4 py-2 ${
-              scope === item
+              scope === item.key
                 ? "bg-primary text-white"
                 : "bg-secondary text-gray-700"
             }`}
           >
-            {item.charAt(0).toUpperCase() + item.slice(1)}
+            {item.label}
           </button>
         ))}
       </div>

@@ -12,7 +12,7 @@ type Stats = {
   };
 };
 
-async function getDailyStats(db: PrismaClient, userId: string, now: DateTime) {
+async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
 
   // Get daily stats for past 7 days
@@ -45,11 +45,11 @@ async function getDailyStats(db: PrismaClient, userId: string, now: DateTime) {
   return stats;
 }
 
-async function getWeeklyStats(db: PrismaClient, userId: string, now: DateTime) {
+async function getLast4Weeks(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
 
-  // Get weekly stats for past 8 weeks
-  for (let i = 0; i < 8; i++) {
+  // Get weekly stats for past 4 weeks
+  for (let i = 0; i < 4; i++) {
     const date = now.minus({ weeks: i });
     const startOfWeek = date.startOf("week");
 
@@ -78,15 +78,15 @@ async function getWeeklyStats(db: PrismaClient, userId: string, now: DateTime) {
   return stats;
 }
 
-async function getMonthlyStats(
+async function getLast12Months(
   db: PrismaClient,
   userId: string,
   now: DateTime,
 ) {
   const stats: Stats[] = [];
 
-  // Get monthly stats for past 6 months
-  for (let i = 0; i < 6; i++) {
+  // Get monthly stats for past 12 months
+  for (let i = 0; i < 12; i++) {
     const date = now.minus({ months: i });
     const startOfMonth = date.startOf("month");
 
@@ -125,9 +125,9 @@ export const getTransactionStats = privateProcedure
     const now = DateTime.now();
 
     const [daily, weekly, monthly] = await Promise.all([
-      getDailyStats(ctx.db, ctx.user.id, now),
-      getWeeklyStats(ctx.db, ctx.user.id, now),
-      getMonthlyStats(ctx.db, ctx.user.id, now),
+      getLast7Days(ctx.db, ctx.user.id, now),
+      getLast4Weeks(ctx.db, ctx.user.id, now),
+      getLast12Months(ctx.db, ctx.user.id, now),
     ]);
 
     return { daily, weekly, monthly };
