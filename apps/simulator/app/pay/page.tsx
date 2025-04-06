@@ -68,8 +68,7 @@ export default function PaymentScreen() {
         toast({
           variant: "destructive",
           title: "Transaction Denied",
-          description:
-            result.message || "Your transaction could not be processed.",
+          description: "Your transaction could not be processed.",
         });
       }
     } catch (error) {

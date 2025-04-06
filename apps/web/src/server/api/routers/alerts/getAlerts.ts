@@ -11,9 +11,26 @@ export const getAlerts = privateProcedure
         userId: ctx.user.id,
       },
       include: {
-        transaction: true,
-        rules: true,
-        client: true,
+        transaction: {
+          select: {
+            id: true,
+            amount: true,
+            status: true,
+            createdAt: true,
+            metadata: true,
+          },
+        },
+        rules: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        client: {
+          select: {
+            email: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

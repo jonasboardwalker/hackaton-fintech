@@ -34,92 +34,9 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
+import { api, type RouterOutputs } from "~/trpc/react";
 
-// Define the alert data type
-type Alert = {
-  id: string;
-  transactionId: string;
-  user: string;
-  amount: string;
-  rule: string;
-  priority: "high" | "medium" | "low";
-  date: string;
-  status: "pending" | "resolved" | "dismissed";
-};
-
-// Mock data for alerts
-const alerts: Alert[] = [
-  {
-    id: "ALERT-001",
-    transactionId: "TX123457",
-    user: "Michael Chen",
-    amount: "$5,000.00",
-    rule: "After Hours Limit",
-    priority: "high",
-    date: "2023-04-23T20:43:23.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-002",
-    transactionId: "TX123459",
-    user: "Emily Wong",
-    amount: "$3,500.00",
-    rule: "Manager Approval",
-    priority: "medium",
-    date: "2023-04-23T16:25:43.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-003",
-    transactionId: "TX123462",
-    user: "Robert Smith",
-    amount: "$12,500.00",
-    rule: "High Value Transfer",
-    priority: "high",
-    date: "2023-04-23T19:35:43.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-004",
-    transactionId: "TX123463",
-    user: "Lisa Wang",
-    amount: "$4,200.00",
-    rule: "Manager Approval",
-    priority: "medium",
-    date: "2023-04-23T17:25:43.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-005",
-    transactionId: "TX123470",
-    user: "John Smith",
-    amount: "$7,800.00",
-    rule: "Geo Restriction",
-    priority: "high",
-    date: "2023-04-23T18:15:43.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-006",
-    transactionId: "TX123471",
-    user: "Anna Martinez",
-    amount: "$2,300.00",
-    rule: "Velocity Control",
-    priority: "low",
-    date: "2023-04-23T15:45:43.511Z",
-    status: "pending",
-  },
-  {
-    id: "ALERT-007",
-    transactionId: "TX123472",
-    user: "Kevin Park",
-    amount: "$1,900.00",
-    rule: "Weekend Approvals",
-    priority: "low",
-    date: "2023-04-23T14:25:43.511Z",
-    status: "pending",
-  },
-];
+type Alert = RouterOutputs["alerts"]["getAlerts"][number];
 
 // Define the columns for the table
 const columns: ColumnDef<Alert>[] = [
@@ -133,50 +50,61 @@ const columns: ColumnDef<Alert>[] = [
     header: "Transaction ID",
   },
   {
-    accessorKey: "user",
+    accessorKey: "client.email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          User
+          Client
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "amount",
+    accessorKey: "transaction.amount",
     header: "Amount",
-  },
-  {
-    accessorKey: "rule",
-    header: "Triggered Rule",
-  },
-  {
-    accessorKey: "priority",
-    header: "Priority",
     cell: ({ row }) => {
-      const priority = row.getValue("priority") as string;
+      const transaction = row.original.transaction;
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(transaction.amount);
+      return <div>{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "rules",
+    header: "Triggered Rules",
+    cell: ({ row }) => {
+      const rules = row.original.rules;
+      if (!rules || rules.length === 0) return <div>-</div>;
+      return (
+        <div className="space-y-1">
+          {rules.map((rule) => rule.name).join(", ")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
       return (
         <Badge
-          variant={
-            priority === "high"
-              ? "destructive"
-              : priority === "medium"
-                ? "default"
-                : "outline"
-          }
+          variant={status === "open" ? "destructive" : "outline"}
           className="capitalize"
         >
-          {priority}
+          {status}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return (
         <Button
@@ -189,7 +117,7 @@ const columns: ColumnDef<Alert>[] = [
       );
     },
     cell: ({ row }) => (
-      <div>{new Date(row.getValue("date")).toLocaleString()}</div>
+      <div>{new Date(row.getValue("createdAt")).toLocaleString()}</div>
     ),
   },
   {
@@ -209,8 +137,8 @@ const columns: ColumnDef<Alert>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>View Details</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Resolve Alert</DropdownMenuItem>
-            <DropdownMenuItem>Dismiss Alert</DropdownMenuItem>
+            <DropdownMenuItem>Approve Alert</DropdownMenuItem>
+            <DropdownMenuItem>Reject Alert</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -221,6 +149,9 @@ const columns: ColumnDef<Alert>[] = [
 export function AlertsTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // Fetch alerts data
+  const { data: alerts = [], isLoading } = api.alerts.getAlerts.useQuery();
 
   const table = useReactTable({
     data: alerts,
@@ -296,7 +227,16 @@ export function AlertsTable() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Loading alerts...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
