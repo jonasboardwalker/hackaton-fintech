@@ -1,7 +1,5 @@
 import type React from "react";
-import { DashboardNav, MainNav, MobileNav ,
-  UserNav,
-} from "~/components/dashboard";
+import { DashboardNav, MainNav, MobileNav } from "~/components/dashboard";
 import { UserButton } from "@clerk/nextjs";
 import { ModeSwitcher } from "../_components/mode-switcher";
 
