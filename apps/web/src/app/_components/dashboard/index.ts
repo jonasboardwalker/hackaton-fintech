@@ -4,7 +4,6 @@ export * from "./dashboard-nav"
 export * from "./dashboard-header"
 export * from "./dashboard-shell"
 export * from "./mobile-nav"
-export * from "./transactionsOverviewCard"
 export * from "./recent-transactions"
 export * from "./rule-form/rule-form";
 export * from "./rules-table"

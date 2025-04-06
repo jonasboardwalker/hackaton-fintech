@@ -15,8 +15,8 @@ type Stats = {
 async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
 
-  // Get daily stats for past 7 days
-  for (let i = 0; i < 7; i++) {
+  // Get daily stats for past 7 days, newest first
+  for (let i = 6; i >= 0; i--) {
     const date = now.minus({ days: i });
     const startOfDay = date.startOf("day");
 
@@ -48,8 +48,8 @@ async function getLast7Days(db: PrismaClient, userId: string, now: DateTime) {
 async function getLast4Weeks(db: PrismaClient, userId: string, now: DateTime) {
   const stats: Stats[] = [];
 
-  // Get weekly stats for past 4 weeks
-  for (let i = 0; i < 4; i++) {
+  // Get weekly stats for past 4 weeks, newest first
+  for (let i = 3; i >= 0; i--) {
     const date = now.minus({ weeks: i });
     const startOfWeek = date.startOf("week");
 
@@ -85,8 +85,8 @@ async function getLast12Months(
 ) {
   const stats: Stats[] = [];
 
-  // Get monthly stats for past 12 months
-  for (let i = 0; i < 12; i++) {
+  // Get monthly stats for past 12 months, newest first
+  for (let i = 11; i >= 0; i--) {
     const date = now.minus({ months: i });
     const startOfMonth = date.startOf("month");
 

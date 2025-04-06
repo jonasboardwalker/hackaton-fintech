@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -15,7 +15,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
+} from "~/components/ui/chart";
 import { TransactionStatsEntrySchema } from "~/server/api/routers/dashboard/getTransactionStats.schema";
 
 export const description = "A stacked bar chart with a legend";
@@ -34,15 +34,42 @@ const chartConfig = {
 type Props = {
   data: TransactionStatsEntrySchema[];
   className?: string;
+  scope: "daily" | "weekly" | "monthly";
 };
 
-export function TransactionsOverviewCard({ className, data }: Props) {
+export function TransactionsOverviewCard({ className, data, scope }: Props) {
+  const formatDate = (timestamp: string) => {
+    const date = new Date(timestamp);
+
+    switch (scope) {
+      case "daily":
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "weekly":
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      case "monthly":
+        return date.toLocaleDateString("en-US", { month: "short" });
+      default:
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+    }
+  };
+
   return (
     <Card className={className}>
       <CardHeader>
         <CardTitle>Transaction Overview</CardTitle>
         <CardDescription>
-          Summary of recent transaction activity
+          {scope === "daily" && "Last 7 days of transactions"}
+          {scope === "weekly" && "Last 4 weeks of transactions"}
+          {scope === "monthly" && "Last 12 months of transactions"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -54,6 +81,13 @@ export function TransactionsOverviewCard({ className, data }: Props) {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              tickFormatter={formatDate}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+              tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />

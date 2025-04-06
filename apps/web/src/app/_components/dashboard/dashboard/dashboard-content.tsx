@@ -2,12 +2,10 @@
 
 import { TransactionStatsSchema } from "~/server/api/routers/dashboard/getTransactionStats.schema";
 import { useMemo, useState } from "react";
-import {
-  TransactionsOverviewCard,
-  TransactionWorldMap,
-} from "~/app/_components";
+import { TransactionWorldMap } from "~/app/_components";
 import { TransactionsSummaryCard } from "./cards/transactions-summary-card";
 import { AlertsSummaryCard } from "./cards/alerts-summary-card";
+import { TransactionsOverviewCard } from "./cards/transactions-overview-card";
 
 type Props = {
   stats: TransactionStatsSchema;
@@ -47,12 +45,16 @@ export function DashboardContent(props: Props) {
           </button>
         ))}
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <TransactionsSummaryCard count={totalTransactions} />
         <AlertsSummaryCard count={totalAlerts} />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <TransactionsOverviewCard data={data} className="col-span-1" />
+        <TransactionsOverviewCard
+          data={data}
+          className="col-span-1"
+          scope={scope}
+        />
         <TransactionWorldMap className="col-span-1" />
       </div>
     </div>
