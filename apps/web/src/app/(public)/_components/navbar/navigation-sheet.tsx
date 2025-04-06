@@ -1,5 +1,4 @@
 import { Link, Menu } from "lucide-react";
-import { Logo } from "../../../_components/logo";
 import { NavMenu } from "./nav-menu";
 import { SignedOut } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
@@ -11,6 +10,7 @@ import {
 } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { MainNav } from "~/app/_components";
 
 export const NavigationSheet = async () => {
   return (
@@ -24,7 +24,7 @@ export const NavigationSheet = async () => {
         </Button>
       </SheetTrigger>
       <SheetContent>
-        <Logo />
+        <MainNav />
         <NavMenu orientation="vertical" className="mt-12" />
 
         <div className="mt-8 space-y-4">

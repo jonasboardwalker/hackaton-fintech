@@ -1,4 +1,3 @@
-import { Logo } from "../../../_components/logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import { ModeSwitcher } from "~/app/_components/mode-switcher";
@@ -6,12 +5,13 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ROUTES } from "~/app/_lib/routes";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import { MainNav } from "~/app/_components";
 
 const Navbar = async () => {
   return (
     <nav className="bg-background border-accent h-16 border-b">
       <div className="mx-auto flex h-full max-w-screen-xl items-center justify-between px-4 sm:px-6">
-        <Logo />
+        <MainNav />
 
         {/* Desktop Menu */}
         <NavMenu className="hidden md:block" />
