@@ -107,7 +107,7 @@ const columns: ColumnDef<Transaction>[] = [
       return (
         <div className="pl-3 text-left">
           <Badge
-            variant={status === "allowed" ? "outline" : "destructive"}
+            variant={status === "approved" ? "outline" : "destructive"}
             className="capitalize"
           >
             {status}
