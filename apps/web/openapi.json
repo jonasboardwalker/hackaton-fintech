@@ -30,12 +30,16 @@
                   },
                   "clientId": {
                     "type": "string"
+                  },
+                  "clientEmail": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "amount",
                   "metadata",
-                  "clientId"
+                  "clientId",
+                  "clientEmail"
                 ]
               }
             }

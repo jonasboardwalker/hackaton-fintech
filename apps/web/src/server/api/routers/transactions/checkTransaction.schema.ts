@@ -8,6 +8,7 @@ export const checkTransactionInputSchema = z.object({
   amount: z.number().positive(),
   metadata: metadataSchema,
   clientId: z.string(),
+  clientEmail: z.string(),
 });
 
 export const checkTransactionOutputSchema = z.object({

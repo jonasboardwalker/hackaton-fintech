@@ -18,7 +18,7 @@ async function main() {
   console.log("Created user:", user);
 
   // 2. Create a client
-  const client = await prisma.client.create({
+  /*const client = await prisma.client.create({
     data: {
       email: "client@example.com",
       role: "admin",
@@ -27,10 +27,10 @@ async function main() {
   });
   console.log("Created client:", {
     ...client,
-  });
+  });*/
 
   // 3. Create a sample rule
-  const rule = await prisma.rule.create({
+  /*const rule = await prisma.rule.create({
     data: {
       name: "High Value Transaction Alert",
       description: "Alert on transactions over $10,000",
@@ -42,7 +42,7 @@ async function main() {
       userId: user.id,
     },
   });
-  console.log("Created rule:", rule);
+  console.log("Created rule:", rule);*/
 
   console.log("Seeding complete!");
 }

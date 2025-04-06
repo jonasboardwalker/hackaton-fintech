@@ -19,6 +19,7 @@ export class DefaultService {
                 location?: string;
             };
             clientId: string;
+            clientEmail: string;
         },
     ): CancelablePromise<{
         status: 'allowed' | 'denied';

@@ -3,7 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { apiKeyProcedure } from "../../trpc";
 import {
   checkTransactionInputSchema,
-  checkTransactionOutputSchema, metadataSchema,
+  checkTransactionOutputSchema,
+  metadataSchema,
 } from "~/server/api/routers/transactions/checkTransaction.schema";
 
 export const checkTransaction = apiKeyProcedure
@@ -18,13 +19,37 @@ export const checkTransaction = apiKeyProcedure
       });
     }
 
-    const { amount, metadata = {}, clientId } = input;
+    const { amount, metadata = {}, clientId, clientEmail } = input;
     const status = amount > 1000 ? "denied" : "allowed";
+
+    let client = await ctx.db.client.findFirst({
+      where: {
+        idFromUser: clientId,
+        userId: ctx.user.id,
+      },
+    });
+
+    if (!client)
+      client = await ctx.db.client.create({
+        data: {
+          email: clientEmail,
+          userId: ctx.user.id,
+          idFromUser: clientId,
+        },
+      });
+
+    if (client.email !== clientEmail)
+      await ctx.db.client.update({
+        where: { id: client.id },
+        data: {
+          email: clientEmail,
+        },
+      });
 
     const transaction = await ctx.db.transaction.create({
       data: {
         userId: ctx.user.id,
-        clientId,
+        clientId: client.id,
         amount,
         status,
         metadata,
