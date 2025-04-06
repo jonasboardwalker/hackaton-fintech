@@ -47,7 +47,7 @@ export default function PaymentScreen() {
     try {
       const result = await trustClient.checkTx({
         amount: Number.parseFloat(data.amount),
-        clientId: "1",
+        clientId: "a655a3c6-338c-4d6c-9149-b2f0ffd98c51",
         metadata: { location: devOverrides.location },
       });
 
