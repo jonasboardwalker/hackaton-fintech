@@ -43,6 +43,7 @@ import { Separator } from "~/app/_components/ui/separator";
 import { ruleSchema, rulePartSchema } from "~/utils/rules/rules.schema";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
+import { api } from "~/trpc/react";
 
 type RuleFormValues = z.infer<typeof ruleSchema>;
 type RulePart = z.infer<typeof rulePartSchema>;
@@ -62,22 +63,25 @@ export function RuleForm() {
     mode: "onChange",
   });
 
+  const createRule = api.rules.createRule.useMutation();
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "parts",
   });
 
-  function onSubmit(values: RuleFormValues) {
-    // In a real application, you would send this data to your API
-    console.log(values);
+  async function onSubmit(values: RuleFormValues) {
+    try {
+      await createRule.mutateAsync(values);
 
-    // Show a success toast instead of an alert
-    toast.success("Rule created successfully", {
-      description: `Rule "${values.name}" has been created and is ${values.active ? "active" : "inactive"}.`,
-    });
-
-    // Reset the form after successful submission
-    form.reset();
+      // Show a success toast instead of an alert
+      toast.success("Rule created successfully", {
+        description: `Rule "${values.name}" has been created and is ${values.active ? "active" : "inactive"}.`,
+      });
+      form.reset();
+    } catch {
+      toast.error("Rule wasn't created");
+    }
   }
 
   const addRulePart = (type: RulePart["rulePartType"]) => {
