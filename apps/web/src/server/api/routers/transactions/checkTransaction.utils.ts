@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { type Rule, type Transaction } from "@prisma/client";
 import { ruleSchema } from "~/utils/rules/rules.schema";
+import { metadataSchema } from "./checkTransaction.schema";
 
 type TransactionCheckInput = {
   transaction: {
     amount: number;
-    metadata: Record<string, unknown>;
+    metadata: z.infer<typeof metadataSchema>;
   };
   previousTransactions: Transaction[];
   rules: Rule[];
@@ -23,16 +24,9 @@ type Location = {
   lng: number;
 };
 
-type TransactionMetadata = {
-  role?: string;
-  location?: Location;
-  timestamp?: string;
-  [key: string]: unknown;
-};
-
 type TransactionWithMetadata = {
   amount: number;
-  metadata: TransactionMetadata;
+  metadata: z.infer<typeof metadataSchema>;
 };
 
 type RuleWithActive = Rule & {
@@ -125,20 +119,28 @@ const checkTravelingSpeed: CheckFunction = (
   transaction,
   previousTransactions,
 ) => {
-  if (part.rulePartType !== "travelingSpeed") return true;
+  if (part.rulePartType !== "travelingSpeed") return false;
   const { maxKmh } = part;
   const currentLocation = transaction.metadata.location;
-  if (!currentLocation) return true; // Skip check if no location data
+  if (!currentLocation) return false; // Skip check if no location data
+
+  // If there are no previous transactions, we can't calculate speed, so return true
+  if (previousTransactions.length === 0) return false;
 
   // Get last transaction with location
-  const lastTransaction = previousTransactions.find(
-    (t) => (t.metadata as TransactionMetadata).location,
-  );
-  if (!lastTransaction) return true; // Skip check if no previous location
+  const lastTransaction = previousTransactions
+    .filter(({ status }) => status === "approved")
+    .find((t) => {
+      const metadata = t.metadata as z.infer<typeof metadataSchema> | null;
+      return metadata?.location;
+    });
+  if (!lastTransaction) return false; // Skip check if no previous location
 
-  const lastLocation = (lastTransaction.metadata as TransactionMetadata)
-    .location;
-  if (!lastLocation) return true;
+  const lastMetadata = lastTransaction.metadata as z.infer<
+    typeof metadataSchema
+  > | null;
+  const lastLocation = lastMetadata?.location;
+  if (!lastLocation) return false;
 
   const lastTime = new Date(lastTransaction.createdAt).getTime();
   const currentTime = new Date().getTime();
@@ -158,7 +160,7 @@ const checkTravelingSpeed: CheckFunction = (
   const distance = R * c;
 
   const speed = distance / timeDiffHours;
-  return speed <= maxKmh;
+  return speed >= maxKmh;
 };
 
 // Check role rule
@@ -191,9 +193,6 @@ export const runTransactionCheck = ({
     amount: transaction.amount,
     metadata: {
       ...transaction.metadata,
-      role: "user", // Example role
-      location: { lat: 50.0755, lng: 14.4378 }, // Example location (Prague)
-      timestamp: new Date().toISOString(),
     },
   };
 

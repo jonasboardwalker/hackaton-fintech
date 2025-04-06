@@ -1,7 +1,14 @@
 import { z } from "zod";
 
+export const locationSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+});
+
 export const metadataSchema = z.object({
-  location: z.string().optional(),
+  location: locationSchema.optional(),
+  role: z.string().optional(),
+  timestamp: z.string().optional(),
 });
 
 export const checkTransactionInputSchema = z.object({

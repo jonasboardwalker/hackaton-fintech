@@ -80,10 +80,21 @@ export default function DevToolsPage() {
                 <SelectValue placeholder="Select location" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Germany">Germany</SelectItem>
-                <SelectItem value="France">France</SelectItem>
-                <SelectItem value="Ukraine">Ukraine</SelectItem>
-                <SelectItem value="United States">United States</SelectItem>
+                <SelectItem value="Prague">Prague, Czech Republic</SelectItem>
+                <SelectItem value="London">London, UK</SelectItem>
+                <SelectItem value="New York">New York, USA</SelectItem>
+                <SelectItem value="Tokyo">Tokyo, Japan</SelectItem>
+                <SelectItem value="Sydney">Sydney, Australia</SelectItem>
+                <SelectItem value="Dubai">Dubai, UAE</SelectItem>
+                <SelectItem value="Singapore">Singapore</SelectItem>
+                <SelectItem value="Paris">Paris, France</SelectItem>
+                <SelectItem value="Berlin">Berlin, Germany</SelectItem>
+                <SelectItem value="Moscow">Moscow, Russia</SelectItem>
+                <SelectItem value="Cape Town">Cape Town, South Africa</SelectItem>
+                <SelectItem value="Rio de Janeiro">Rio de Janeiro, Brazil</SelectItem>
+                <SelectItem value="Mumbai">Mumbai, India</SelectItem>
+                <SelectItem value="Toronto">Toronto, Canada</SelectItem>
+                <SelectItem value="Mexico City">Mexico City, Mexico</SelectItem>
               </SelectContent>
             </Select>
           </div>

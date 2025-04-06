@@ -22,6 +22,25 @@ import { useToast } from "@/hooks/use-toast";
 import { useDevTools } from "@/context/dev-tools-context";
 import { trustClient } from "@/lib/trust-limit-client";
 
+// City coordinates mapping
+const cityCoordinates: Record<string, { lat: number; lng: number }> = {
+  "Prague": { lat: 50.0755, lng: 14.4378 },
+  "London": { lat: 51.5074, lng: -0.1278 },
+  "New York": { lat: 40.7128, lng: -74.0060 },
+  "Tokyo": { lat: 35.6762, lng: 139.6503 },
+  "Sydney": { lat: -33.8688, lng: 151.2093 },
+  "Dubai": { lat: 25.2048, lng: 55.2708 },
+  "Singapore": { lat: 1.3521, lng: 103.8198 },
+  "Paris": { lat: 48.8566, lng: 2.3522 },
+  "Berlin": { lat: 52.5200, lng: 13.4050 },
+  "Moscow": { lat: 55.7558, lng: 37.6173 },
+  "Cape Town": { lat: -33.9249, lng: 18.4241 },
+  "Rio de Janeiro": { lat: -22.9068, lng: -43.1729 },
+  "Mumbai": { lat: 19.0760, lng: 72.8777 },
+  "Toronto": { lat: 43.6532, lng: -79.3832 },
+  "Mexico City": { lat: 19.4326, lng: -99.1332 },
+};
+
 // Define a Zod schema for the form data.
 const formSchema = z.object({
   amount: z.string().nonempty("Amount is required"),
@@ -45,11 +64,17 @@ export default function PaymentScreen() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
     try {
+      const cityCoords = cityCoordinates[devOverrides.location] || cityCoordinates["Prague"];
+      
       const result = await trustClient.checkTx({
         amount: Number.parseFloat(data.amount),
         clientId: "a655a3c6-338c-4d6c-9149-b2f0ffd98c51",
         clientEmail: "daniil@gmail.com",
-        metadata: { location: devOverrides.location },
+        metadata: {
+          location: cityCoords,
+          role: devOverrides.userRole || "user",
+          timestamp: new Date().toISOString(),
+        },
       });
 
       if (result.status === "approved") {

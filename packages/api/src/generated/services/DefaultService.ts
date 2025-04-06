@@ -16,7 +16,12 @@ export class DefaultService {
         requestBody: {
             amount: number;
             metadata: {
-                location?: string;
+                location?: {
+                    lat: number;
+                    lng: number;
+                };
+                role?: string;
+                timestamp?: string;
             };
             clientId: string;
             clientEmail: string;
@@ -30,7 +35,12 @@ export class DefaultService {
             amount: number;
             status: string;
             metadata: {
-                location?: string;
+                location?: {
+                    lat: number;
+                    lng: number;
+                };
+                role?: string;
+                timestamp?: string;
             };
             createdAt: string;
         };
