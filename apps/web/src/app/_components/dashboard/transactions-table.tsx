@@ -51,53 +51,74 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "clientId",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          User
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            User
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
+    cell: ({ row }) => (
+      <div className="text-right">{row.original.client.email}</div>
+    ),
   },
   {
     accessorKey: "amount",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Amount
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Amount
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (
-      <div className="text-center">
+      <div className="text-right">
         {"$" + Number(row.getValue("amount")).toFixed(2)}
       </div>
     ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       return (
-        <Badge
-          variant={
-            status === "approved"
-              ? "outline"
-              : status === "blocked"
-                ? "destructive"
-                : "secondary"
-          }
-          className="capitalize"
-        >
-          {status}
-        </Badge>
+        <div className="text-right">
+          <Badge
+            variant={
+              status === "approved"
+                ? "outline"
+                : status === "blocked"
+                  ? "destructive"
+                  : "secondary"
+            }
+            className="capitalize"
+          >
+            {status}
+          </Badge>
+        </div>
       );
     },
   },
@@ -105,17 +126,21 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => (
-      <div>{new Date(row.getValue("createdAt")).toLocaleString()}</div>
+      <div className="text-right">
+        {new Date(row.getValue("createdAt")).toLocaleString()}
+      </div>
     ),
   },
   {
